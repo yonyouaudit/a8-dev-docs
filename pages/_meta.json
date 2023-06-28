@@ -1,6 +1,8 @@
 {
     "index": "首页",
+    "frontend": "前端开发",
+    "backend": "后端开发",
     "config": "配置",
-    "contact": "联系我们",
+    "third": "服务集成",
     "about": "关于"
   }
