@@ -1,0 +1,48 @@
+# Uploader
+
+## 组件描述
+
+` Uploader`上传组件是对  `tinper-bee `中 `upload` 组件的封装，用于向服务器上传附件资源。
+
+## 组件属性
+
+```typescript
+interface UploadFileItem {
+  uid: string;
+  name: string;
+  status: string;
+  url: string;
+  thumbUrl: string;
+}
+
+export interface AttachmentService {
+  /**
+   * 获取表单附件列表并转为Upload组件所需对象
+   */
+  getAttachments(formDataId: string, category?: string): Promise<any>;
+  getDownloadUrl(fileItem: FileSpec): string;
+  getThumbUrl(fileItem: FileSpec): string;
+  deleteAttach(id: string): Promise<boolean>;
+}
+
+export interface UploaderProps extends SimpleFormControlProps {
+  allowext?: string;
+  action?: string;
+  service?: AttachmentService;
+  category?: string;
+}
+
+class Uploader extends PureComponent<UploaderProps, any> {
+```
+
+## 依赖组件/依赖服务
+
+* 依赖组件：tinper-bee的[upload组件](http://bee.tinper.org/tinper-bee/bee-upload)
+
+## 示例（源码）
+
+(略)。。。
+
+## 更新日志
+
+> * 2022-08-26  tufeiping   `uploader`组件完成开发。

@@ -1,0 +1,108 @@
+# 表单引擎公共函数
+
+**A8** `表单引擎` 内部的公共函数库，包含了很多可以复用的全局函数，以及一些常用的工具函数。**A8** 产品的其他部分也可以使用这些函数。以下是常用的函数列表及简单的使用说明：
+
+1. 校验字段必填项是否满足
+
+传入表单项（字段）列表及数据，判断是否满足必填项的校验规则，返回值为boolean，满足条件为 `true`。
+
+```typescript
+export function checkRequires(
+  fields: IFormItem[] | undefined,
+  data: any,
+  info?: { error: string }
+): boolean;
+```
+
+2. 校验组件属性必填项是否满足
+
+传入属性设计器面板的`JsonSchema`定义及数据，然后判断是否符合`必填项`要求，返回值为boolean，满足条件为 `true`。
+
+```typescript
+export function checkPropertiesRequires(
+  jsonSchema: any,
+  data: any,
+  info?: { error: string }
+): boolean;
+```
+
+3. 是否是DEBUG模式
+
+全局函数，在系统的任何地方都可以使用，返回值为boolean，满足条件为 `true`。这可以用于部分调试代码的开关。
+
+```typescript
+export function isDebugMode(): boolean;
+```
+
+示例
+
+```typescript
+  if (isDebugMode()) {
+    console.log('debug mode');
+  }
+```
+
+4. 扩展类行为，支持继承
+
+表单引擎中，部分类是`wrapper`类，类似于`Java`里面的继承，但又更轻量（内部采用匿名类的方式实现），这个函数可以用于扩展一些之前的类，但可以提供部分新的`props`值以替代之前的 **默认值**。
+  
+```typescript
+/**
+ * 扩展类行为，支持继承
+ * 
+ * @param T 需要扩展的React组件类
+ * @param className 扩展后的组件类名
+ * @param methods 原始类的公共方法
+ * @param extProps 扩展的属性
+ * @returns 生成的新类
+ */
+export function extendsClass(
+  T: React.ComponentClass,
+  className: string,
+  methods: string[],
+  extProps: any
+): React.ComponentClass;
+```
+
+示例
+
+```typescript
+const OpenDialogFormListPage = extendsClass(
+  FormListPage,
+  "OpenDialogFormListPage",
+  ["doSearch", "getModelView", "getAIPSearchPanel"],
+  {
+    openMode: "dialog",
+  }
+);
+```
+
+
+
+
+5. 获取表单宽度
+
+全局函数，虽然名字因为历史原因，里面包含 `Preview`，但是这个函数可以在任何地方使用，返回值为number，表示表单的宽度。
+
+```typescript
+export function getFormPreviewWidth(): number;
+```
+
+6. 判断是否是中文
+
+这个函数判断给定的字符串是否包含中文字符，返回值为boolean，包含中文返回值为 `true`。
+
+```typescript
+/**
+ * 判断是否是zh-CN
+ * @param source
+ * @returns 
+ */
+export function isChinese(source: string): boolean;
+```
+
+7. 去除首尾空格
+
+```typescript
+function trim(str: string): string
+```

@@ -1,0 +1,35 @@
+# SubForm
+
+## 组件描述
+
+` SubForm`子表单组件。子表单载入后是disabled状态，不能编辑，子表单默认关联字段为id（只能返回1条数据），子表由于存在数据依赖，一般只出现在展示页面，不会出现在录入表单！
+
+## 组件属性
+
+| 名称      | 类型   | 说明           | 默认值 |
+| --------- | ------ | -------------- | ------ |
+| formId    | string | 表单ID         |        |
+| formField | string | 主表单关联字段 |        |
+
+```typescript
+export interface SubFormProps extends RendererProps {
+  formField: string;
+  formId: string;
+}
+
+```
+
+## 依赖组件/依赖服务
+
+* 依赖服务：`formEngineService`
+* 依赖组件：`<FormEngine/>`表单引擎组件。
+
+## 示例（源码）
+
+(略)。。。
+
+## 更新日志
+
+> * 2022-09-05  tufeiping   `SubForm`子表单组件完成开发。
+> * 2022-09-26  luhui           修复Bug(去掉调试数据，主子表关联改为配置数据)。
+> * 2022-10-26  zhuxl          子表单组件属性设置，子表单输入框改为弹出选择组件。

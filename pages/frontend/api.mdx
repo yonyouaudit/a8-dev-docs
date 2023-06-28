@@ -1,0 +1,50 @@
+# API服务
+
+所有的对外部的请求，如果没有特殊原因，均放在本目录下
+
+- BasicInfo 基础信息服务
+- flow 流程相关服务
+- form 表单引擎相关服务
+- mgr 系统管理相关服务
+- model 模型列表相关服务（移植自NCW）
+
+## 调用示例
+
+为了后续更好的控制`ajax`请求，请使用如下例子所示方式完成调用
+
+```ts
+import { AIPResponse } from "aip-module/types";
+import servUrl from "../pathService";
+import { getEx, postEx } from "../request";
+
+export const UserService = {
+  // eg. GET
+  getUserSetting: (): Promise<AIPResponse> => {
+    return getEx(servUrl + "/v1/userSetting");
+  },
+
+  // eg. POST
+  updateUserSetting: (params: any): Promise<AIPResponse> => {
+    return postEx(servUrl + "/v1/userSetting", params);
+  },
+};
+
+```
+
+> 统一使用 `getEx` 和 `postEx` 可以使得后续加入鉴权和加解密更加方便统一
+
+## 加密请求服务
+
+在一些需要加密参数的场景，可以使用`request`中的`postExWithSec`方法，使用方式与`postEx`一致
+
+```ts
+/**
+   * 根据传入sql获取树形数据
+   * @param token
+   */
+  getTreeData(token: string): Promise<any> {
+    return postExWithSec(servUrl + "/cc/api/getQueryData", {token: token}); // token 为包含SQL的字符串，在传递过程中，不能明文传递
+  },
+```
+
+> 注意：postExWithSec 函数的`post`参数不能为简单字符串，必须是对象类型!

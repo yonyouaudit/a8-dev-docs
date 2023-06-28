@@ -1,0 +1,36 @@
+# FormLink
+
+## 组件描述
+
+` FormLink`表单链接组件。
+
+## 组件属性
+| 名称            | 类型    | 说明            | 默认值 |
+| ---------------| ------- | ----------------------| ------ |
+| token          | string  | sql           |
+| formIdField    | string  | 表单ID字段        |       |
+| dataIdField    | string  | 数据ID字段          |       |
+| labelField     | string  | 显示字段          |       |
+
+
+```typescript
+export interface FormLinkProps extends FormItemControlProps {
+    token?: string;
+    formIdField?: string;
+    dataIdField?: string;
+    labelField?: string;
+
+}
+
+export default class FormLink extends PureComponent<FormLinkProps, any> {
+```
+## 依赖组件/依赖服务
+
+* 依赖服务：`BizService`
+
+## 示例（源码）
+(略)。。。
+
+## 更新日志
+
+> * 2023-04-25  sunyang     `FormLink`表单链接组件完成开发。

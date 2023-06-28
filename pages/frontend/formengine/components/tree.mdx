@@ -1,0 +1,239 @@
+# 业务组件
+
+## TreeSelect
+
+弹出树形选择控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+treeData | array | treeNodes数据 | [] 
+dialogTitle | string | 弹窗标题 | 请选择
+checkable | boolean | 节点前添加Checkbox复选框 | false
+multipleSelect | boolean | 支持多选 | false
+asynLoadData | boolean | 异步加载数据 | false
+rootPidValue | string | 根节点PID值 | 0
+token | string | 查询sql | -
+idField | string | id字段 | id
+pidField | string | pid字段 | pid
+labelField | string | 显示字段 | title
+valueField | string | 值字段 | id
+onlyLeaf | boolean | 单选时只允许选择叶子节点 | false
+dynamicParam | boolean | 动态参数查询 | false
+
+```typescript
+export interface TreeSelectProps extends FormControlProps {
+  treeData: any;
+  dialogTitle?: string;
+  checkable?: boolean;
+  multipleSelect?: boolean;
+  asynLoadData?: boolean;
+  rootPidValue?: string;
+  token?: string;
+  idField?: string;
+  pidField?: string;
+  labelField?: string;
+  valueField?: string;
+  onlyLeaf?: boolean;
+  dynamicParam?: boolean;
+}
+```
+
+> 说明：当asynLoadData=true时需设置rootPidValue，如果查询sql的参数依赖于页面其他字段，需设置dynamicParam=true
+
+## BasicTreeSelect
+
+枚举下拉树形选择控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+typeCode | string | 枚举类型id | -
+multipleSelect | boolean | 支持多选 | false
+allowClear | boolean | 支持清除 | false
+showSearch | boolean | 支持搜索 | false
+onlyLeaf | boolean | 仅选择末级 | false
+
+```typescript
+export interface BasicTreeSelectProps extends FormControlProps {
+  typeCode: string;
+  multipleSelect?: boolean;
+  allowClear?: boolean;
+  showSearch?: boolean;
+  onlyLeaf?: boolean;
+}
+```
+
+## BasicSelect
+
+枚举下拉选择控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+typeCode | string | 枚举类型id | -
+multipleSelect | boolean | 支持多选 | false
+allowClear | boolean | 支持清除 | false
+showSearch | boolean | 支持搜索 | false
+
+```typescript
+export interface BasicSelectProps extends FormControlProps {
+  typeCode: string;
+  multipleSelect?: boolean;
+  allowClear?: boolean;
+  showSearch?: boolean;
+}
+```
+
+## CustomSelect2
+
+自定义下拉选择控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+token | string | 查询sql | -
+labelField | string | 显示字段 | label
+valueField | string | 值字段 | value
+multipleSelect | boolean | 支持多选 | false
+allowClear | boolean | 支持清除 | false
+showSearch | boolean | 支持搜索 | false
+supportWrite | boolean | 支持输入(支持搜索时有效) | false
+
+```typescript
+export interface CustomSelect2Props extends FormControlProps {
+  token: string;
+  labelField?: string;
+  valueField?: string;
+  multipleSelect?: boolean;
+  allowClear?: boolean;
+  showSearch?: boolean;
+  supportWrite?: boolean;
+}
+```
+
+## BasicCascader
+
+枚举级联选择控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+typeCode | string | 枚举类型id | -
+separator | string | 分隔符 | "/ "
+
+```typescript
+export interface BasicCascaderProps extends FormControlProps {
+  typeCode: string;
+  separator?: string;
+}
+```
+
+## BasicTableSelect
+
+枚举信息弹出表格选择控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+typeCode | string | 枚举类型id | -
+dialogTitle | string | 弹出窗口标题 | 请选择
+multipleSelect | boolean | 支持多选 | false
+
+```typescript
+export interface BasicTableSelectProps extends FormControlProps {
+  typeCode: string;
+  dialogTitle?: string;
+  multipleSelect?: boolean;
+}
+```
+
+## InputMoney
+
+金额输入框控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+precision | number | 小数位数 | 2
+min | number | 最小值 | -999999999999999
+max | number | 最大值 | 999999999999999
+hideActionButton | boolean | 隐藏加减按钮 | true
+formatMoney | boolean | 千分位显示 | true
+
+```typescript
+export interface InputMoneyProps extends FormControlProps {
+  precision?: number;
+  min?: number;
+  max?: number;
+  hideActionButton?: boolean;
+  formatMoney?: boolean;
+}
+```
+
+> precision 设置值范围0-4
+
+
+## InputInteger
+
+整数输入框控件
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+min | number | 最小值 | -999999999999999
+max | number | 最大值 | 999999999999999
+step | number | 间隔值 | 1
+hideActionButton | boolean | 隐藏加减按钮 | true
+
+```typescript
+export interface InputIntegerProps extends FormItemControlProps {
+  min?: number;
+  max?: number;
+  step?: number;
+  hideActionButton?: boolean;
+}
+```
+
+> step（间隔值）是每次点击加减按钮时增减的值
+
+
+## InputQuery
+
+查询显示框
+
+属性列表：
+
+| 名称 | 类型 | 说明 | 默认值 |
+| ------ | ------ | ------ | ------ |
+token | string | 查询sql | -
+numberDisplay | boolean | 数值显示 | false
+precision | number | 小数位数 | 0
+formatMoney | boolean | 千分位显示 | false
+
+```typescript
+export interface InputQueryProps extends FormItemControlProps {
+  token?: string;
+  numberDisplay?: boolean;
+  precision?: number;
+  formatMoney?: boolean;
+}
+```
+
+> numberDisplay 设置为true时，属性precision、formatMoney才起作用
+
+## InputFormState
+
+表单状态显示框
+
+属性列表： 无
+
+> 该组件根据设置的表单和流程状态对应关系（状态编码对应）来获取表单业务状态

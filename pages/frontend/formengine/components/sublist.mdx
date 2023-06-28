@@ -1,0 +1,45 @@
+# SubList
+
+## 组件描述
+
+` SubList`子表组件。子表关联字段请设置为子列表的查询条件包含的字段，且该字段必须出现在列表的参照中。
+
+## 组件属性
+
+| 名称          | 类型    | 说明                                                         | 默认值 |
+| ------------- | ------- | ------------------------------------------------------------ | ------ |
+| queryid       | string  | 模型ID                                                       |        |
+| fieldset      | string  | 新增时赋值（示例：子表字段1=主表字段1;子表字段2=主表字段2）  |        |
+| sourcefield   | string  | 表单字段                                                     |        |
+| relationfield | string  | 关联模型字段                                                 |        |
+| value         | any     |                                                              |        |
+| canopr        | boolean | 是否允许编辑/删除                                            |        |
+| formid        | string  | 表单ID                                                       |        |
+| selectModel   | string  | 预留；子表选择模式：禁用：""、单选："singleSelect"、多选："multipleSelect"* | “”     |
+
+```typescript
+export interface SubListProps extends FormItemControlProps {
+  queryid: string;        // 查询引擎模型id
+  fieldset?: string;      // 新增时赋值
+  sourcefield?: string;   // 字段
+  relationfield?: string; // 关联字段
+  value?: any;
+  canopr?: boolean;
+  formid?: string;
+  selectModel?: string;   //子表选择模式：禁用：""、单选："singleSelect"、多选："multipleSelect"
+}
+
+```
+
+## 依赖组件/依赖服务
+
+* 依赖服务：`formEngineService`
+* 依赖组件：` <TinyAipTable/>` 组件。（ali-react-table中`<BaseTable/>`组件的封装）。
+
+## 示例（源码）
+
+(略)。。。
+
+## 更新日志
+
+> * 2022-08-31  tufeiping   `SubList`子表组件完成开发。

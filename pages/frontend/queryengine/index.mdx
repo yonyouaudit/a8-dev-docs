@@ -1,0 +1,12 @@
+# 查询模型组件
+
+`A8 平台` 中所有的列表均复用了 `NCW` 的 `查询分析引擎`，均引入了 `aip-querymodel` 组件。
+
+## 结构
+
+- FlowListPage.tsx  流程列表页面
+- FormListPage.tsx  表单数据页面（所有标准表单项目的列表）
+- ModelListPage.tsx  表单列表页面（名字与上面是否容易混淆？确实如此）
+- index.ts 主单元（导出）
+- ToDoListPage.tsx 待办列表页面
+- ApiQueryModel.tsx  API 查询列表模型，有时候列表数据来源不是查询分析引擎，可能是来自某个 `Rest API`，这时候就需要使用这个业务UI组件来呈现

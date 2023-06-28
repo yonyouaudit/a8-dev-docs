@@ -1,0 +1,76 @@
+# aip-formengine
+
+该模块是`AIP`前端框架的`表单引擎`部分，是`AIP`的核心模块。
+
+## 模块组成
+
+- fe-core ais表单渲染器（与amis兼容，是amis的替代方案，也是默认实现）
+  - renderers 内置组件（如输入，选择，按钮等）
+  - components 内置的一些组件
+  - core 表单渲染器（json-schema解析逻辑），是核心逻辑实现
+  - style 默认的样式
+
+- common 公共函数和类支持
+- components 表单内置核心组件
+  - biz 内置业务组件
+  - amisext amis基础组件属性扩展
+
+- fe-core ais表单渲染器（与amis兼容，是amis的替代方案，也是默认实现）
+  - renderers 内置组件（如输入，选择，按钮等）
+  - core 表单渲染器（json-schema解析逻辑），是核心逻辑实现
+  - style 默认的样式
+
+- form 表单业务实现类：表单设计器，表单显示器，表单实现stub
+
+- renderers  表单渲染器（各组件的渲染器）
+- style 默认的样式
+
+> 关于`fe-core/components`与`renderers`的区别： `fe-core/components`是`amis`的替代方案，很多系统级的组件，如`input`/`button`/`page`/`form`等组件都在核心内部完成注册，而`renderers`是业务扩展的组件。
+
+
+一个我们自行开发的简单的表单渲染器，A8默认采用`amis`作为前端渲染，但在使用的过程中，发现仅仅使用`amis`作为渲染引擎，有点**大材小用**，它是一个完整的表单系统，虽然`amis`功能强大，但由此带来巨额内存和包体积开销，所以我们自己开发了一个简单的表单渲染器，叫做`AIP-FrontEnd-Core`。
+
+## 开发原则
+- 兼容`amis`渲染器代码相关的特性，在代码上保持可以快速切换渲染器
+- 兼容`amis`的`JSON-Schema`，其实也是为了保证渲染器切换
+- 尽量简单，使用新的渲染器就是因为`amis`的巨额开销，所以做个简单的
+- 保持灵活性，对于第三方组件的嵌入，保持`组件注册API`的灵活性
+
+
+## 表单部分
+- AmisForm.tsx AMIS 兼容的表单渲染实现
+- AntdForm.tsx Antd 的表单渲染实现
+- bizcompsupport.ts 业务组件扩展接口默认实现（未实现实际业务）
+- FormEngine.tsx 表单引擎公共实现（内部会根据需要引入特定的表单渲染实现，默认是AmisForm）
+- FormView.tsx 表单对外组件，内部引入了 `FormEngine`，但实现了默认的数据载入，保存的逻辑，引入了 `IFormEngineService` 和可选的 `GetBussinessComponents` 服务
+- WebControlSelect.tsx 标准组件/业务组件选择器，它作为表单引擎设计器内置的一部分，依赖于 `WebControlTypeItem[]` 数据，需要外部赋值
+
+
+## 表单引擎核心
+
+全面兼容并扩展了 `AMIS` 的表单引擎核心，提供了更多的功能和特性。
+
+- index.tsx  入口文件，提供了全局的配置和方法
+- RootRenderer.tsx  根渲染器
+- SchemaRenderer.tsx  模式渲染器(JSON-Schema)
+- types.ts  类型定义，兼容`AMIS`的类型定义
+
+## Renderers说明
+
+renderers 模块提供了一些AMIS渲染器，用于将将业务组件置于AMIS体系中渲染出来。
+
+这里需要关注的是，A8的组件规范与AMIS的规范基本一致，如果有不一致的地方，需要在定义renderer的时候进行必要的转换。
+
+## 为什么fe-core中不分开components和renderers？
+
+因为`fe-core`内部的基础组件都是依赖于`tinper-bee`组件，所以就不再分为`components`和`renderers`了。都是在`renderers`中直接注册！
+
+如果有需要属性需要设置，还是会在`components`中增加组件的属性设计器，然后在`renderers`中引用。
+
+## 内置核心组件
+
+主要是标准组件的部分实现，同时包括标准组件的一些属性扩展设置。
+
+- Editor.tsx 代码编辑，内部直接使用 MonacoEditor
+- Light.tsx 表单标题后的`小灯泡`组件，用于显示表单的帮助信息
+- Link.tsx  超链接组件实现，包括组件的属性设置编辑器

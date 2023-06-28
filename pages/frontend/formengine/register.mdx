@@ -1,0 +1,32 @@
+# 业务组件注册
+
+系统的大部分组件（除了最基本的组件），都是通过 `register.ts` 文件进行注册的。
+
+目前注册的组件有：
+
+- treeComp 弹出树
+- tableComp 弹出表格
+  iconComp 图标选择
+- uploadComp 附件上传
+- subListComp 子表
+- basicSelectComp 基础信息列表
+- modelSelectComp 模型表格选择
+- basicTreeSelectComp 基础信息树
+- subFormComp 子表单
+- personGroupComp 人员机构
+- customSelect2Comp 自定义列表
+- editSubLitComp 可编辑子表
+- selectListWithFill 列表-填充
+
+## 业务组件注册示例
+
+```typescript
+const selectListWithFill: IComponentRegister = {
+  propertiesEditor: SelectListWithFillProperties,
+  jsonSchemaTag: "au-select-list-with-fill",
+  type: "selectListWithFill",
+  label: "列表-填充",
+};
+
+componentsRegister([selectListWithFill]);
+```

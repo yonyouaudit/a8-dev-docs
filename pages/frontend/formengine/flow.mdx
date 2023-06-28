@@ -1,0 +1,43 @@
+# 流程UI组件
+
+流程组件是对于 `aip-bpmn` 组件的封装，提供了流程设计器和流程查看器（含A8业务，如与表单引擎集成）。
+
+## BpmnViewPage
+
+流程展示组件
+
+属性列表如下
+
+~~~typescript
+export interface FlowViewPageProps {
+  bpmnXml: string;
+  currentStep?: string; // 当前节点ID
+}
+
+~~~
+
+内部依赖于 `ReactBpmnViewer` 组件
+
+## BpmnDesignerPage
+
+流程设计器组件
+
+属性列表如下
+
+~~~typescript
+export interface BpmnDesignerPageProps extends PropsWithChildren<any> {
+  flowId?: string;
+}
+
+export default class BpmnDesignerPage extends PureComponent<
+  BpmnDesignerPageProps, any>
+
+~~~
+
+### 依赖服务
+
+- FormService
+- BPMNService
+
+内部依赖于 `ReactBpmnDesigner` 组件
+

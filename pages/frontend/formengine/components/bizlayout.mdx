@@ -1,0 +1,63 @@
+# BizLayout
+
+## 组件描述
+
+` BizLayout`布局填充组件（带填充其他字段的功能）。
+
+## 组件属性
+
+| 名称                | 类型    | 说明                                              | 默认值 |
+| ------------------- | ------- | ------------------------------------------------- | ------ |
+| biz_layout          | string  | 布局类型：左树右表ltrt、左树右表单ltrf、列表table | ltrt   |
+| modelId             | string  | 左树模型                                          |        |
+| formid              | string  | 右表单列表                                        |        |
+| formshowToolbar     | boolean | 右表单操作栏是否显示(保存按钮、流程操作按钮等)    |        |
+| rightmodelid        | string  | 右侧模型列表                                      |        |
+| paramid             | string  | 左树右表关联参数                                  |        |
+| lefttitle           | string  | 左树标题字段名                                    |        |
+| labelField?         | string  | 布局-显示字段                                     |        |
+| valueField?         | string  | 布局-值字段                                       |        |
+| openmode?           | string  | 表单打开方式                                      |        |
+| leftordername?      | string  | 左树排序字段名 leftOrderField                     |        |
+| lefteditmodal?      | string  | 左树是否启用编辑                                  |        |
+| leftautorefresh?    | string  | 左树是否自动刷新                                  |        |
+| leftonlyleaf        | string  | 左树是否仅末级选择                                |        |
+| checkable           | string  | 右表是否多选("1"多选，"0"单选)                    |        |
+| hidebuttons?        | string  | 隐藏按钮                                          |        |
+| assignexpression?   | string  | 表单新增赋值表达式                                |        |
+| fieldsetexpression? | string  | 布局填充表达式                                    |        |
+
+```typescript
+export interface BizLayoutProps extends FormItemControlProps {
+  biz_layout: string,          //布局：左树右表ltrt、左树右表单ltrf
+  modelId: string,             //左侧树模型
+  formid: string,              //右侧表单
+  formshowToolbar: boolean,    //右侧表单操作栏是否显示(保存按钮、流程操作按钮等)
+  rightmodelid: string,        //右侧模型列表
+  paramid: string,             //左树右表关联参数
+  lefttitle: string,           //左侧树标题字段名
+  labelField?: string;         //显示字段
+  valueField?: string;         //值字段
+  openmode?: string,           //打开方式
+  leftordername?: string,      //左侧树排序字段名 leftOrderField
+  lefteditmodal?: string,      //左侧树是否启用编辑
+  leftautorefresh?: string,    //左侧树是否自动刷新
+  hidebuttons?: string,        //隐藏按钮
+  assignexpression?: string,   //新增赋值表达式
+  fieldsetexpression?: string, //填充表达式
+}
+
+class BizLayout extends PureComponent<BizLayoutProps, any> {
+```
+
+## 依赖组件/依赖服务
+
+* 依赖组件：`<LeftTreeRightForm/>左树右表单、` `<LeftTreeRightList/>左树右表、` `<RightList/>列表组件、` 
+
+## 示例（源码）
+
+(略)。。。
+
+## 更新日志
+
+> * 2023-02-09  luhuisj   布局组件完成功能开发*暂时只开放左树右表单（目前布局组件右侧区域取值只支持了表单，列表暂未支持）*。

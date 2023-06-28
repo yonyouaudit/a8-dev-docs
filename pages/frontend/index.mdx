@@ -1,0 +1,130 @@
+# 二次开发支持
+
+`A8` 产品除了提供`React+TypeScript`开发模式支持，也 **有限支持** 在 `page.html/stub.html` 中使用 `JavaScript` 进行一些必要的二次开发。
+
+## 二次开发入口
+
+`A8` 提供 `JavaScript` 接口支持的入口在 `src/Plugins.tsx` 文件，该文件是所有 `插件` 机制的入口，包括：
+
+- `A8` 产品的 `JavaScript` 接口支持
+- `A8` 产品的 `插件` 机制支持
+- `A8` 产品的 `业务组件` 注册
+
+## JavaScript 接口支持
+
+对外(window 全局对象)暴露了如下方法：
+
+- registerButton 注册自定义按钮
+
+```ts
+registerButton (
+  title: string,
+  content: string, // 可以使用html内容字符串
+  onClick?: (selected: any[]) => void,
+  icon?: string, // icon 必须来自 http://bee.tinper.org/tinper-bee/bee-icon
+)
+```
+
+> 链接 [tinper-icon](http://bee.tinper.org/tinper-bee/bee-icon)
+
+- showMessage 显示消息
+
+```ts
+showMessage(content: string)
+```
+
+- showErrorMessage 显示错误消息
+
+```ts
+showErrorMessage(content: string)
+```
+
+- 渲染表单
+
+```ts
+auditEndPoint(
+  jsonSchema: Schema, // Json Schema
+  selector: string | HTMLElement, // selector
+  data?: any, // 表单数据
+  getScoped?: (scoped: any) => void, // scoped可以获取表单数据
+)
+```
+
+
+## 如何注册一个 `JavaScript` 自定义按钮
+
+在 `public/page.html` 文件中 `<script>` 中，注册一个 `JS` 自定义按钮：
+
+```js
+window.appOnReady = function () { // APP 加载完成后回调
+    window.fens.registerButton(
+        "静态JS按钮",
+        "<p>此组件来自JavaScript！</p><br/>PATH: " + location.href,
+        function (selected) {
+            alert(JSON.stringify(selected));
+        }
+    );
+};
+```
+
+> 注意，所有 `插件` 的注册都需要在 `appOnReady` 方法中进行，否则无法生效。
+
+## 如何使用 `JavaScript` 渲染表单
+
+在 `public/stub.html` 文件中 `<script>` 中，渲染一个 `JS` 表单：
+
+```js
+const jsonScheme = {
+    title: "测试表单",
+    type: "page",
+    name: "a8page",
+    body: [
+    {
+        type: "form",
+        title: "",
+        name: "a8form",
+        id: "a8form-B_DEMO_TABLE",
+        mode: "",
+        body: [
+        {
+            type: "input-text",
+            label: "名称",
+            name: "fr_name",
+            required: true,
+            disabled: false,
+            hidden: false,
+            singleLine: false,
+        },
+        ],
+        actions: [],
+        columnCount: 1,
+        onlyInput: false,
+    },
+    ],
+    remark: "这仅仅是个测试环境的表单，正式环境将删除",
+};
+
+let _scoped = null;
+
+window.appOnReady = function () { // APP 加载完成后回调
+    window.auditEndPoint(
+        jsonScheme,
+        "#root",
+        {
+            fr_name: "测试数据",
+        },
+        function (scoped) {
+            _scoped = scoped;
+        }
+    );
+};
+
+// 获取数据方法
+function getData() {
+    alert(JSON.stringify(_scoped.getValues()));
+}
+```
+
+> scoped 返回的是 `SchemaRenderer` 对象，其中的 `props` 属性中包含了表单所有的信息，可以通过 `scoped.getValues()` 或者 `scoped.props.data` 获取表单数据。
+
+**注意** 为了更好的扩展业务，`A8` 产品提供静态页面 `stub.html` 可以采用 `JavaScript` 方式扩展业务（特殊情况）。

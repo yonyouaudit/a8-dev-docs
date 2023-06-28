@@ -1,0 +1,40 @@
+# EditSubList
+
+## 组件描述
+
+` EditSubList`可编辑子表组件。可编辑的子表关联的表单必须是相对简单的表单，不能有字段联动脚本设置，因为涉及“批量更新”，请不要使用在需要分页的场景。
+
+## 组件属性
+
+| 名称            | 类型               | 说明                                                        | 默认值 |
+| --------------- | ------------------ | ----------------------------------------------------------- | ------ |
+| fieldset        | string             | 新增时赋值（示例：子表字段1=主表字段1;子表字段2=主表字段2） |        |
+| formid          | string             | 表单ID                                                      |        |
+| height          | number<br />string | 表格高度                                                    |        |
+| sourcefield     | string             | 关联到主表字段                                              |        |
+| filtercondition | string             | 过滤条件                                                    |        |
+
+```typescript
+export interface EditSubListProps extends FormItemControlProps {
+  fieldset?: string;  // 新增时赋值（示例：子表字段1=主表字段1;子表字段2=主表字段2）
+  formid?: string;
+  height?: number | string;
+  sourcefield?:string;
+  filtercondition?:string;
+}
+
+
+```
+
+## 依赖组件/依赖服务
+
+* 依赖服务：`ModelService、BizService`
+* 依赖组件：tinper-bee的 ` <Table/>` 组件；aip-module的 `<Toolbar/>`组件。
+
+## 示例（源码）
+
+(略)。。。
+
+## 更新日志
+
+> * 2022-09-09  tufeiping     `EditSubList`可编辑子表组件完成开发。

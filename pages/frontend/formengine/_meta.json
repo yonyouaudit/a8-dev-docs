@@ -1,5 +1,9 @@
 {
+    "index": "首页",
     "components": "组件体系",
     "extdev": "开发扩展",
-    "router": "动态路由"
+    "router": "动态路由",
+    "flow": "流程图组件",
+    "util": "工具函数",
+    "register": "业务组件注册"
 }

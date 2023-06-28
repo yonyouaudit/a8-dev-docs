@@ -1,6 +1,10 @@
 {
-    "architec": "架构体系",
-    "formengine": "表单引擎",
-    "queryengine": "查询引擎",
-    "aip": "AIP组件"
+  "index": "首页",
+  "architec": "架构体系",
+  "formengine": "表单引擎",
+  "queryengine": "查询引擎",
+  "aip": "AIP组件",
+  "api": "服务请求",
+  "studio": "开发工作台",
+  "watermark": "水印设置"
 }

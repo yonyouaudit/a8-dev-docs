@@ -1,0 +1,50 @@
+# SelectListWithFill
+
+## 组件描述
+
+` SelectListWithFill`树填充组件（带填充其他字段的功能）。
+
+## 组件属性
+
+| 名称           | 类型    | 说明             | 默认值 |
+| -------------- | ------- | ---------------- | ------ |
+| token          | string  | 建树SQL          |        |
+| fieldset       | string  | 填充字段(表达式) |        |
+| idField        | string  | ID字段(本级)     |        |
+| pidField       | string  | PID字段(上级)    |        |
+| labelField     | string  | 显示字段         |        |
+| valueField     | string  | 值字段           |        |
+| onlyLeaf       | boolean | 末级选择         | 是     |
+| multipleSelect | boolean | 是否支持多选     | 否     |
+
+```typescript
+export interface SelectTreeWithFillProp extends FormItemControlProps {
+  token: string;
+  fieldset: string;
+  labelField: string;
+  valueField: string;
+  idField: string;
+  pidField: string;
+  onlyLeaf?: boolean;
+  multipleSelect?: boolean;
+}
+
+/**
+ * 下拉树，带填充其他字段的功能
+ * @param props
+ */
+class SelectTreeWithFill extends PureComponent<SelectTreeWithFillProp, any> {
+```
+
+## 依赖组件/依赖服务
+
+* 依赖服务：`BizService`
+* 依赖组件：`<TreeSelect/>`弹出树组件 <== ` <SearchTree/>组件` <== tinper-bee中 `<Tree/>`组件
+
+## 示例（源码）
+
+(略)。。。
+
+## 更新日志
+
+> * 2022-09-22  tufeiping   SelectListWithFill树填充组件完成开发。
