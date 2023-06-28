@@ -1,0 +1,34 @@
+# DefaultValue
+
+## 组件描述
+
+` DefaultValue` 默认值组件。
+
+## 组件属性
+| 名称            | 类型    | 说明            | 默认值 |
+| ---------------| ------- | ----------------------| ------ |
+| token          | string  | sql           |
+| labelField     | string  | 显示字段        |       |
+| valueField     | string  | 值字段          |       |
+
+
+```typescript
+export interface DefaultValueProps extends FormItemControlProps {
+token?: string;
+labelField?: string;
+valueField?: string;
+}
+
+export default class DefaultValue extends PureComponent<DefaultValueProps, any> {}
+```
+
+## 依赖组件/依赖服务
+* 依赖服务：`BizService`
+* 依赖组件: tinper-bee 的 <FormControl> 组件
+
+## 示例（源码）
+(略)。。。
+
+## 更新日志
+
+> * 2023-04-03  sunyang     `DefauleValue` 默认值组件完成开发。
