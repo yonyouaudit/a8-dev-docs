@@ -31,4 +31,4 @@ export A8_NACOS_DATA_ID=DEFAULT
 java -jar ais.jar -Dnacos.serverAddr=10.2.112.92:38847 -Dnacos.group=DEFAULT_GROUP -Dnacos.dataId=DEFAULT
 ```
 
-
+> 注意，如果 `Nacos` 配置发生变化，`A8` 服务会自动重启应用，但为了安全起见，建议还是 `硬性` 重启应用
