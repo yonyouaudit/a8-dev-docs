@@ -6,5 +6,7 @@
   "aip": "AIP组件",
   "api": "服务请求",
   "studio": "开发工作台",
-  "watermark": "水印设置"
+  "watermark": "水印设置",
+  "package": "前端打包",
+  "ts": "TypeScript类型说明"
 }
