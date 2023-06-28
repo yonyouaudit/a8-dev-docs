@@ -8,5 +8,6 @@
   "studio": "开发工作台",
   "watermark": "水印设置",
   "package": "前端打包",
-  "ts": "TypeScript类型说明"
+  "ts": "TypeScript类型说明",
+  "dev": "界面开发指南"
 }
