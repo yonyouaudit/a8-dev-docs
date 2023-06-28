@@ -1,0 +1,182 @@
+# 非集群版本配置
+
+配置文件是 `A8数智化审计平台` 运行的基础设置项，包括数据库连接、日志、缓存、文件存储、消息等。
+
+## 配置文件路径
+
+`A8数智化审计平台` 配置文件路径为 `classes:/application.yml`。
+
+## 配置文件内容
+
+```yaml
+server:
+  port: 8082
+  servlet:
+    context-path: /ais
+
+spring:
+  application:
+    name: ais
+  datasource: # --- MySQL/MariaDB ---
+    url: jdbc:mysql://10.2.112.23:3306/a8dev?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&nullCatalogMeansCurrent=true
+    username: DEC:JwRdHb6r/Rf0jkb/6aJ3+A==
+    password: DEC:JwRdHb6r/Rf0jkb/6aJ3+A==
+    # --- Oracle ---
+    # url: jdbc:oracle:thin:@10.2.112.23:1521:orcl
+    # username: V753
+    # password: V753
+    data: classpath:/init.sql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+
+  jpa:
+    database: MYSQL
+    # database: Oracle
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    # database-platform: org.hibernate.dialect.Oracle10gDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      max-file-size: 50MB #单个数据大小
+      max-request-size: 100MB #总数据大小
+
+  resources:
+    static-locations: classpath:templates/
+
+  boot:
+    admin:
+      client:
+        url: http://localhost:8082/ais
+
+  # Redis 是可选的，需要启用Redis的Cache实现
+  redis:
+    host: 10.2.112.81
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+    timeout: 10000ms
+
+  # Quartz 是可选的，需要启用Quartz的定时任务模块
+  quartz:
+    job-store-type: jdbc
+    # 程序结束时会等待quartz相关的内容结束
+    wait-for-jobs-to-complete-on-shutdown: true
+    # QuartzScheduler启动时更新己存在的Job,这样就不用每次修改targetObject后删除qrtz_job_details表对应记录
+    overwrite-existing-jobs: true
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: scheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
+# Activiti 是可选的，如果需要替换其他的流程引擎，需要实现  com.yonyouaud.flow.service.FlowService 和 com.yonyouaud.flow.service.FlowLogService 接口
+activiti:
+  history-level: full
+  db-history-used: true
+  # 自动创建表需要再数据库链接添加nullCatalogMeansCurrent=true
+  database-schema-update: true
+
+  check-process-definitions: false
+  # 启用作业执行器
+  async-executor-activate: false
+  # 启用异步执行器
+  job-executor-activate: false
+
+ais: # 表单引擎配置
+  form-engine:
+    autoBackup: true
+    chain:
+      - com.yonyouaud.formengine.processor.mysql.MySQLProcessor
+
+    schemaSupport: com.yonyouaud.formengine.processor.mysql.MySQLSchemaSupport
+
+  # 环境变量hook类
+  env: com.yonyouaud.configcenter.env.EnvironmentsImpl
+
+  # 邮件发送配置
+  mail:
+    host: smtp.exmail.qq.com
+    port: 465
+    username:
+    password:
+    clazz: com.yonyouaud.ais.service.impl.MailServicceImpl
+    apiKey: re_byDoHTv5_7w4AQbaAkATQj6hqyzhPZHVY
+
+  # 流程引擎配置
+  flow:
+    enable: true
+
+  # jwt配置
+  jwt:
+    secret: httpscloudyonyouaudcomproductaisreleasejwttokensecrethttpscloudyonyouaudcomproductaisreleasejwttokensecrethttpscloudyonyouaudcomproductaisreleasejwttokensecrethttpscloudyonyouaudcomproductaisreleasejwttokensecret
+    expire: 3600
+    header: Authorization
+    prefix: Bearer
+    requestKey: token
+
+  file: #    local storage
+    upload: /ais/upload
+    # storage: com.yonyouaud.files.service.impl.LocalStorageService
+    #    minio storage host info
+    storage: com.yonyouaud.files.service.impl.MinIoStorageService
+    minioEndpoint: http://10.2.112.83:9000
+    minioAccessKey: RIcuzE1L1rxhV1kA
+    minioSecretKey: Nc9i3nMPsfvmz73LPG5zzvt9RuvLFEU8
+
+  search:
+    host: http://10.2.112.81:4080
+    clazz: com.yonyouaud.searcher.server.zinc.ZincSearcher
+
+  mc: # 消息中心默认实现
+    impl: com.yonyouaud.mc.service.impl.MessageServiceImpl
+
+  cache: # 缓存配置
+    #    clazz: com.yonyouaud.commons.cache.impl.A8CacheManagerHolder
+    clazz: com.yonyouaud.ext.cache.A8RedisCacheHolder
+
+# 可选集成的服务，需要配置后端服务，前端Uploader组件的 window.getPreviewUrl 也需要配置
+only-office:
+  host: http://demo10.yonyouaud.com # http://10.2.112.24:9007
+  expire: 3600
+  useJwt: false
+
+# 可选集成的服务，监控服务 AIS 服务中配置了 spring-boot-starter-actuator
+management:
+  health:
+    redis:
+      enabled: false
+  endpoint:
+    restart:
+      enabled: true
+    health: # never/when-authorized/always
+      show-details: "ALWAYS"
+    web:
+      base-path: /monitor
+      exposure:
+        include: "*"
+
+info:
+  product: dogPBl5pFMw5F1JSPjrbD/8mq7FpHaHVgrH/U5T0I/ncxlEE63G1cDjOH9NhUnW+6RdiF/o4SWruGd41dRAFBfisbi5YtUA34RGhtFbebBaYOC1kt8p6HokZaNZNebqAtTlp2qippOQ1uP4uRaOUK93PUTxtU8msAsXDKYozzPaREktGy4UB1wZvhVbzwLVmvZJ1GhPSuAtH/Af1qiYjk5YGq/ofvug2gVbe14JDC+HNP6k3B9umPzyz2hLD9j9n+vLCP5xstki8Zvhw3/v1TZupB8Op/Wa5k9wJgzD9DKC3UQEhxRwKWtIYane3dIc6uFxtP336KQeaogd/MbJao0YsrkIPxpxw2BI2sqfxc/arB5hrLNk2L36hbuTibCff8PQFLAeTtQQIr3Oqnmt/10X53LYFiy1gX5Fj6XdzjWqp6qIDjO6Pbc+7x1ZHSQxfL2wlPhGS6D9tTmCS+1MN6YzAxmnILTFp7WCICJndUEjNIPl0cKBc3YEgDK6xUVvU
+
+```
+
+## 3.2. 配置文件说明

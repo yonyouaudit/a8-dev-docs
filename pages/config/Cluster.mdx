@@ -1,0 +1,34 @@
+# 集群部署配置
+
+
+## 1. 配置服务
+
+默认介入的是 `Nacos` 服务，实际实施过程中，需要修改 `Nacos` 连接服务信息，有三种方式可以进行配置服务设置
+
+### 1.1 在 `nacos.properties` 中修改
+
+```text
+serverAddr=10.2.112.92:38847
+dataId=DEFAULT
+group=DEFAULT_GROUP
+```
+
+该模式下，需要将 `nacos.properties` 文件放置在 `classpath` 下
+
+> 目前适配的 `Nacos` 版本是 `1.3.2`，其他版本暂未覆盖到
+
+### 1.2 环境变量配置服务信息
+
+```shell
+export A8_NACOS_SERVER_ADDR=10.2.112.92:38847
+export A8_NACOS_GROUP=DEFAULT_GROUP
+export A8_NACOS_DATA_ID=DEFAULT
+```
+
+### 1.3 JVM参数配置服务信息
+
+```shell
+java -jar ais.jar -Dnacos.serverAddr=10.2.112.92:38847 -Dnacos.group=DEFAULT_GROUP -Dnacos.dataId=DEFAULT
+```
+
+
