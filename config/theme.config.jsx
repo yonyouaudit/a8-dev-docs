@@ -19,10 +19,8 @@ export default {
   feedback: { content: null },
   docsRepositoryBase: "https://git.yonyouaud.com/a8/a8-dev-docs/-/tree/master",
   i18n: [
-    { locale: "en", text: "English" },
+    // { locale: "en", text: "English" },
     { locale: "zh", text: "中文" },
-    { locale: "On This Page", text: "内容导航"},
-    { locale: "Edit this page", text: "编辑此页"} 
   ],
   footer: {
     text: (
