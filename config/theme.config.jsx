@@ -1,6 +1,6 @@
 export default {
   logo: <span>A8数智化审计平台开发文档</span>,
-  navTheme: "dark",
+  // navTheme: "dark",
   project: {
     link: "https://git.yonyouaud.com/a8/frontend.git",
     icon: (
