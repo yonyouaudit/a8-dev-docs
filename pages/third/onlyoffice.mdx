@@ -1,1 +1,209 @@
-# OnlyOffice 在线文档
+# OnlyOffice 安装部署文档
+
+## OnlyOffice介绍
+
+`ONLYOFFICE Docs` 是一个在线办公套件，包括文本、电子表格和演示文稿的查看器和编辑器，完全兼容 `Office Open XML` 格式：`.docx`、`.xlsx`、`.pptx`，并支持实时协作编辑。
+
+### 功能性
+
+- 文档编辑器
+- 电子表格编辑器
+- 演示文稿编辑器
+- 移动网络查看器
+- 协作编辑
+- 象形文字支持
+- 支持所有流行的格式：DOC，DOCX，TXT，ODT，RTF，ODP，EPUB，ODS，XLS，XLSX，CSV，PPTX，HTML
+
+### 系统要求
+
+- CPU双核 2 GHz 或更高
+- 内存 2 GB 或更多
+- 硬盘 至少 40 GB 可用空间
+- 至少 4 GB 交换的额外要求
+- 操作系统RHEL 7 或 CentOS 7
+- Docker：版本 1.9.0 或更高版本
+
+## Docker离线部署
+
+2.1	安装包下载
+
+下载地址：[https://download.docker.com/linux/static/stable](https://download.docker.com/linux/static/stable)
+ 
+选择对应版本下载，这里选择的是x86_64架构 `docker-23.0.0.tgz`。
+
+2.2	docker安装
+
+上传docker-23.0.0.tgz到安装目录。
+
+解压
+```sh
+tar -xzvf docker-23.0.0.tgz
+```
+
+将解压后的文件夹 复制到 `usr/bin` 下
+```sh
+cp docker/* /usr/bin/
+```
+
+在 `/etc/systemd/system` 目录下创建 `docker.service` 文件
+
+```sh
+vim /etc/systemd/system/docker.service
+```
+
+并添加如下内容：
+```text
+[Unit]
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+After=network-online.target firewalld.service
+Wants=network-online.target
+ 
+[Service]
+Type=notify
+# the default is not to use systemd for cgroups because the delegate issues still
+# exists and systemd currently does not support the cgroup feature set required
+# for containers run by docker
+ExecStart=/usr/bin/dockerd
+ExecReload=/bin/kill -s HUP $MAINPID
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+# Uncomment TasksMax if your systemd version supports it.
+# Only systemd 226 and above support this version.
+#TasksMax=infinity
+TimeoutStartSec=0
+# set delegate yes so that systemd does not reset the cgroups of docker containers
+Delegate=yes
+# kill only the docker process, not all processes in the cgroup
+KillMode=process
+# restart the docker process if it exits prematurely
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+ 
+[Install]
+WantedBy=multi-user.target
+```
+
+添加文件执行权限
+```sh
+chmod +x /etc/systemd/system/docker.service
+```
+
+重载unit配置文件
+```sh
+systemctl daemon-reload
+```
+
+启动docker
+```sh
+systemctl start docker 
+```
+
+docker 服务开机自启动命令 
+```sh
+systemctl enable docker.service 
+```
+
+验证查询docker版本
+```sh
+docker -v
+```
+
+2.3	docker卸载
+
+删除dockers.service
+```sh
+rm -f /etc/systemd/system/docker.service
+```
+
+删除文件
+```sh
+rm -f /usr/bin/containerd
+rm -f /usr/bin/containerd-shim
+rm -f /usr/bin/containerd-shim-runc-v2
+rm -f /usr/bin/ctr
+rm -f /usr/bin/docker
+rm -f /usr/bin/dockerd
+rm -f /usr/bin/docker-init
+rm -f /usr/bin/docker-proxy
+rm -f /usr/bin/runc
+```
+
+重新加载配置文件
+```sh
+systemctl daemon-reload
+```
+
+## OnlyOffice安装
+
+### OnlyOffice镜像拉取（可联网）
+
+拉取最新镜像
+```sh
+docker pull onlyoffice/documentserver:latest
+```
+
+### OnlyOffice镜像拉取（无法联网）
+
+在可以联网的服务器上执行docker pull命令下载镜像
+
+拉取最新
+```sh
+docker pull onlyoffice/documentserver:latest
+```
+ 
+运行 `docker save` 命令将镜像保存为 `tar` 归档文件
+```sh
+docker save -o /home/onlyoffice.tar onlyoffice/documentserver:latest
+```
+将 `tar` 归档文件拷贝到内网服务器
+scp …
+
+导入镜像
+```sh
+docker load -i onlyoffice.tar
+```
+
+### 运行 `docker` 镜像
+
+1. 直接运行镜像（此处用第 2 步）
+```sh
+docker run -i -t -d -p 8081:80 --name onlyoffice --restart=always -e JWT_SECRET=false onlyoffice/documentserver
+```
+
+如果您希望单独安装 `ONLYOFFICE` 文档服务器，请使用此命令。
+
+> 注：从 7.2 版本开始，我们添加了随机生成的 JWT 秘密。如果 JWT secret 没有在环境变量中指定，它会导致在每次 VM 或物理服务器重启时重新生成它，因此集成可能会出现问题。为避免此问题，请在 中指定您自己的值-e JWT_SECRET=my_jwt_secret。如果您不打算在安装中使用 JWT，请使用-e JWT_ENABLED=false.
+
+2. 配置 `docker` 镜像存储数据
+
+所有数据都存储在专门指定的目录，数据卷，在以下位置：
+
+- /var/log/onlyoffice 用于 ONLYOFFICE 文档服务器日志
+- /var/www/onlyoffice/Data 
+- /var/lib/onlyoffice 用于文件缓存
+- /var/lib/postgresql 对于数据库
+
+要从容器外部访问您的数据，您需要安装卷。可以通过在 docker run 命令中指定 `-v` 选项来完成
+
+```sh
+docker run -itd -p 8081:80  -e JWT_ENABLED=false --name onlyoffice --restart=always \
+    -v /data/onlyoffice/DocumentServer/logs:/var/log/onlyoffice  \
+    -v /data/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data  \
+    -v /data/onlyoffice/DocumentServer/lib:/var/lib/onlyoffice \
+    -v /data/onlyoffice/DocumentServer/db:/var/lib/postgresql onlyoffice/documentserver
+```
+
+3. 创建目录(如果需要挂接到容器外)
+```sh
+mkdir -p /data/onlyoffice/DocumentServer/{logs,data,lib,db}
+```
+
+> 注：如果您尝试安装尚未创建的文件夹，则会创建这些文件夹，但对它们的访问将受到限制。您将需要手动更改他们的访问权限。
+4. 访问验证
+
+在浏览器输入：`http://服务器地址:8081`
