@@ -1,5 +1,6 @@
 {
     "index": "产品技术栈说明",
     "resourcechecker": "资源检查器扩展",
-    "jobs": "定时任务模块"
+    "jobs": "定时任务模块",
+    "patch": "补丁机制"
 }

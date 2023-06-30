@@ -1,0 +1,100 @@
+# AIS 补丁包机制
+
+本补丁包机制是为了解决 AIS 项目中的一些问题，而不是为了解决 AIS 项目中的所有问题。所有的补丁必须实现 `com.yonyouaud.commons.patch.Path` 接口
+
+~~~java
+public interface Patch {
+    /**
+     * 执行补丁
+     */
+    void execute() throws Exception;
+}
+~~~
+
+在补丁包中，可以使用 `AIS` 中所有的包及依赖，因为 `Patch` 的运行时置于 `AIS` 之下的，所以可以使用 `AIS` 中的所有类。
+
+## 补丁包的编写
+
+这里是一个简单的例子:
+
+~~~java
+package com.yonyouaud.patchs;
+
+import com.yonyouaud.commons.log.LoggerFactory;
+import com.yonyouaud.commons.patch.Patch;
+import com.yonyouaud.commons.platform.SpringContext;
+import org.slf4j.Logger;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 处理部分字段的补全
+ * <p>
+ * 在正式环境请去掉本补丁，这个仅仅是应用于测试阶段
+ * 本补丁仅仅处理MySQL的场景，其他数据库请注意数据库实现方言
+ *
+ * eg. java -jar ais.jar patch com.yonyouaud.patchs.MakeSpecialFieldsPatch
+ *
+ * eg2. java -Dloader.path=patchs/patchs.jar -jar ais.jar patch com.yonyouaud.patchs.MakeSpecialFieldsPatch
+ *
+ * @author sunny
+ * @since 2022-11-03
+ */
+public class MakeSpecialFieldsPatch implements Patch {
+
+    private static final Logger log = LoggerFactory.getLogger(MakeSpecialFieldsPatch.class);
+    private static JdbcTemplate jdbcTemplate;
+
+    public MakeSpecialFieldsPatch() {
+        super();
+    }
+
+    public JdbcTemplate getJdbcTemplate() {
+        if (jdbcTemplate == null) {
+            jdbcTemplate = SpringContext.getBean(JdbcTemplate.class);
+        }
+        return jdbcTemplate;
+    }
+
+    @Override
+    public void execute() throws Exception {
+        log.info("start to make special fields");
+        // 1. 获取表单实例表
+        String sql = "select * from a_prod_formdef";
+        List<Map<String, Object>> lists = getJdbcTemplate().queryForList(sql);
+        log.info("get {} form definitions", lists.size());
+        log.info("end to make special fields");
+    }
+}
+
+~~~
+
+## 补丁包的打包
+
+设置好依赖，正常使用 `maven` 打包即可，打包后的 `jar` 包放到 `patchs` 或自定义目录下即可。
+
+## 补丁包的执行
+
+在 `AIS` 启动时，可以执行补丁包，执行补丁包的命令如下:
+
+应用内部补丁
+~~~shell
+java -jar ais.jar patch com.yonyouaud.patchs.MakeSpecialFieldsPatch
+~~~
+
+应用外部补丁
+~~~shell
+java -Dloader.path=patchs/patchs.jar -jar ais.jar patch com.yonyouaud.patchs.MakeSpecialFieldsPatch
+~~~
+
+如果有多个补丁包，都放到 `patchs` 目录下，可以使用以下命令执行所有的补丁包
+
+~~~shell
+java -Dloader.path=patchs/ -jar ais.jar patch com.yonyouaud.patchs.MakeSpecialFieldsPatch
+~~~
+
+## 关于补丁的热更新
+
+由于容器化部署，热更新使用场景不多，暂未实现！
