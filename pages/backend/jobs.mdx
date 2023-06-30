@@ -1,0 +1,63 @@
+# A8 定时任务模块（可选）
+
+定时任务模块，可以在指定的时间点执行任务，也可以按照指定的时间间隔执行任务。支持秒级定时任务。
+
+本模块是 `A8` 系统的可选模块，如果不需要定时任务功能，可以不安装本模块。
+
+如果要移除该模块，可以在 `ais` 模块的 `pom.xml` 中移除 `job`
+模块的依赖，然后重新编译 `ais` 模块即可。
+
+模块依赖于 `quartz-2.3.2` 
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-quartz</artifactId>
+</dependency>
+```
+
+配置部分在 `application.yml` 中，如下：
+
+```yaml
+spring:
+  quartz:
+    job-store-type: jdbc # 使用数据库存储任务
+    wait-for-jobs-to-complete-on-shutdown: true # 程序结束时会等待quartz相关的内容结束
+    overwrite-existing-jobs: true # QuartzScheduler启动时更新己存在的Job,这样就不用每次修改targetObject后删除qrtz_job_details表对应记录
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: scheduler  # 实例名称
+            instanceId: AUTO # 实例ID
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX # JobStore 实现类
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate # 方言实现类
+            tablePrefix: QRTZ_ # 表名前缀
+            useProperties: false # 是否使用属性
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool # 线程池实现类
+            threadCount: 10 # 线程数量
+            threadPriority: 5 # 线程优先级
+            threadsInheritContextClassLoaderOfInitializingThread: true # 是否继承类加载器
+```
+
+数据库如果自动序列化建表不成功，可以在 `quartz-2.3.2.jar!org/quartz/impl/jdbcjobstore` 找到不同数据库类型的建表语句，手动建表，如 `MySQL` 建表脚本 `tables_mysql.sql`。
+
+> 该文件已经提取出来（版本），放在 `jobs` 仓库 `docs` 目录下 `tables_mysql.sql`。
+
+## A8与定时任务的集成
+
+`A8` 产品在原则上与定时任务模块是解耦的。定时任务作为一个可选模块，可以在 `A8` 产品中独立使用，也可以与 `A8` 产品集成使用。
+当定时任务模块与 `A8` 集成后，可以在定时任务中执行一些A8中定义的任务实体类。但接口类的定义在 `定时任务` 模块中， `A8` 中并不包含接口类的定义。
+
+## CRON 表达式
+
+可以参考 [Cron表达式说明](https://zhuanlan.zhihu.com/p/555641222) 了解如何设置 `Cron` 表达式
+
+也可以通过 [Cron 表达式生成器](https://cron.qqe2.com/) 生成 `CRON` 表达式。
+
+*其实在设置定时任务的设置界面时，也可以参考 [Cron 表达式生成器](https://cron.qqe2.com/) 来设计*
+
+
+> have fun!
