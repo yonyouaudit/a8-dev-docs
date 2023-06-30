@@ -1,0 +1,66 @@
+# 资源检查器扩展
+
+平台的核心资产包括各种资源：表单定义，表单数据，模型列表数据等。用户对于这些资源的访问和操作都是通过平台的资源检查器来保障的，如果没有通过资源检查器的验证，是不能访问相应的资源。
+资源检查器的扩展主要是通过扩展资源检查器类并注册到系统中，来完成更精细的权限控制。
+
+## 资源检查器扩展的接口
+
+- 所属模块 `product`
+- 接口定义(抽象类) `com.yonyouaud.ais.service.impl.ResourceCheckImpl.ControllerResourceChecker`
+- 接口注册调用方法 `com.yonyouaud.ais.service.impl.ResourceCheckImpl.registerControlledResource(ControllerResourceChecker resource)`
+
+## 资源检查器类
+
+`ControllerResourceChecker` 是一个抽象类，需要实现其中的 `check` 方法，该方法包含三个参数：当前用户所属角色集合，当前请求参数集合。
+该方法的返回值是一个 `boolean` 类型，如果返回 `true`，则表示当前用户有权限访问该资源，否则返回 `false`。
+
+```java
+public static abstract class ControllerResourceChecker {
+        private String url;
+        private String paramName;
+
+        public ControllerResourceChecker(String url, String paramName) {
+            this.url = url;
+            this.paramName = paramName;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getParamName() {
+            return paramName;
+        }
+
+        public abstract boolean check(List<String> roleIds, Map<String, String[]> params);
+    }
+```
+
+## 资源检查器的注册
+
+在二次开发的时候，引入 `product` 模块依赖后，可以通过 `com.yonyouaud.ais.service.impl.ResourceCheckImpl.registerControlledResource(ControllerResourceChecker resource)` 方法来注册资源检查器。
+
+示例代码
+
+```java
+    public static class FormDataListResourceChecker extends ControllerResourceChecker {
+        public FormDataListResourceChecker() {
+            super("/api/fe/api/getFormDataList", "formId");
+        }
+
+        @Override
+        public boolean check(List<String> roleIds, Map<String, String[]> params) {
+            return true;
+        }
+    }
+
+    static {
+        registerControlledResource(new FormDataListResourceChecker());
+    }
+```
+
+## 资源检查器的使用
+
+注册完自己的资源检查器，系统在用户访问资源的时候，会根据请求 `url` 来自动调用 `资源检查器` 的校验逻辑。
+
+> 注意：资源检查器注册到一个 `Map` 数据机构中，所以，如果 `url` 相同，后注册的资源检查器会覆盖之前注册的资源检查器。
