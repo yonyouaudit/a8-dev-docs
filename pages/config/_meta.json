@@ -1,7 +1,7 @@
 {
   "single": "非集群部署配置",
   "cluster": "集群部署配置",
-  "fs": "文档服务配置",
+  "fs": "文件服务配置",
   "full-serach": "全文检索配置",
   "nacos": "Nacos配置",
   "redis": "Redis配置",
