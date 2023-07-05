@@ -16,6 +16,12 @@ export default {
     placeholder: "请输入检索关键字",
     component: null,
   },
+  toc: {
+    title: <>页内导航</>
+  },
+  editLink: {
+    text: <>编辑此页</>
+  },
   feedback: { content: null },
   docsRepositoryBase: "https://git.yonyouaud.com/a8/a8-dev-docs/-/tree/master",
   i18n: [
