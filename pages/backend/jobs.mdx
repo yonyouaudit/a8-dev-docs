@@ -78,7 +78,7 @@ public interface JobExecutor {
 在 `A8` 系统中，可以通过 `API` 方式新增定时任务，也可以通过 `WEB` 界面新增一些内置的定时任务。
 
 ```shell
-curl -X POST "http://localhost:8080/ais/api/v1/jobs/addJob" -H "token: API-Key"  -H "accept: */*" -H "Content-Type: application/json" -d "{ \"cronExpression\": \"0/5 * * * * ?\", \"description\": \"测试定时任务\", \"jobName\": \"testJob\", \"jobGroupName\": \"testGroup\",  \"data\": { \"clazz\": \"test.Test\" }}"
+curl -X POST -H "token: API-Key"  -H "accept: */*" -H "Content-Type: application/json" -d "{ \"cronExpression\": \"0/5 * * * * ?\", \"description\": \"测试定时任务\", \"jobName\": \"testJob\", \"jobGroupName\": \"testGroup\",  \"data\": { \"clazz\": \"test.Test\" }}" http://localhost:8080/ais/api/v1/jobs/addJob
 ```
 
 其中参数是 `JobInfo` 实体对象
@@ -91,6 +91,34 @@ public class JobInfo {
     String description; // 任务描述
 }
 ```   
+
+### 更新定时任务
+
+```shell
+curl -X GET -H "token: API-Key"  -H "accept: */*" -H "Content-Type: application/json" http://localhost:8080/ais/api/v1/jobs/updateJob?jobName=xxx&groupName=yyy&cron=zzz
+```
+
+### 删除定时任务
+
+```shell
+curl -X GET -H "token: API-Key"  -H "accept: */*" -H "Content-Type: application/json" http://localhost:8080/ais/api/v1/jobs/deleteJob?jobName=xxx&groupName=yyy
+```
+
+### 暂停、启动定时任务
+
+```shell
+curl -X GET -H "token: API-Key" -H "accept: */*" -H "Content-Type: application/json" http://localhost:8080/ais/api/v1/jobs/pauseJob?jobName=xxx&groupName=yyy
+
+curl -X GET -H "token: API-Key" -H "accept: */*" -H "Content-Type: application/json" http://localhost:8080/ais/api/v1/jobs/resumeJob?jobName=xxx&groupName=yyy
+```
+
+### 立即执行定时任务
+
+```shell
+curl -X GET -H "token: API-Key" -H "accept: */*" -H "Content-Type: application/json" http://localhost:8080/ais/api/v1/jobs/triggerJob?jobName=xxx&groupName=yyy
+```
+
+> 如果引入了 `jobs` 模块，可以直接使用 `com.yonyouaud.jobs.service.impl.QuartzServiceImpl` 服务类来操作定时任务。
 
 ## CRON 表达式
 
