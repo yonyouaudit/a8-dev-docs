@@ -48,8 +48,48 @@ spring:
 
 ## A8与定时任务的集成
 
+> 鉴于 `定时任务` 的特殊性，建议该模块单独部署，因为 `自定义` 任务实现类，需要在 `执行节点` 上存在，以避免任务执行失败。
+
 `A8` 产品在原则上与定时任务模块是解耦的。定时任务作为一个可选模块，可以在 `A8` 产品中独立使用，也可以与 `A8` 产品集成使用。
-当定时任务模块与 `A8` 集成后，可以在定时任务中执行一些A8中定义的任务实体类。但接口类的定义在 `定时任务` 模块中， `A8` 中并不包含接口类的定义。
+当定时任务模块与 `A8` 集成后，可以在定时任务中执行一些A8中定义的任务接口实现类。
+
+`A8` 定时任务接口类的定义
+```java
+package com.yonyouaud.jobs.beans;
+
+import java.util.Map;
+
+import org.quartz.JobExecutionContext;
+
+/**
+ * 具体任务执行器的接口
+ */
+public interface JobExecutor {
+    void run(JobExecutionContext context, Map<String, ?> data);
+}
+```
+
+如果有个性化的执行逻辑，请实现该接口，无需注册类，仅需要保证该类在执行节点 `ClassPath` 中即可。
+
+## 定时任务的配置
+
+### 新增定时任务
+
+在 `A8` 系统中，可以通过 `API` 方式新增定时任务，也可以通过 `WEB` 界面新增一些内置的定时任务。
+
+```shell
+curl -X POST "http://localhost:8080/ais/api/v1/jobs/addJob" -H "token: API-Key"  -H "accept: */*" -H "Content-Type: application/json" -d "{ \"cronExpression\": \"0/5 * * * * ?\", \"description\": \"测试定时任务\", \"jobName\": \"testJob\", \"jobGroupName\": \"testGroup\",  \"data\": { \"clazz\": \"test.Test\" }}"
+```
+
+其中参数是 `JobInfo` 实体对象
+```java
+public class JobInfo {
+    String jobName; // 任务名称
+    String jobGroupName; // 任务分组
+    String cronExpression; // CRON 表达式
+    Map<String, ?> data; // 扩展参数，如果需要执行个性化类，请保证data中包含参数 clazz，该参数为个性化类的全限定名
+    String description; // 任务描述
+```   
 
 ## CRON 表达式
 
