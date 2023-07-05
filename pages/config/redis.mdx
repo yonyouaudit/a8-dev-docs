@@ -1,0 +1,37 @@
+# Redis 服务配置
+
+`Redis` 也是 `A8` 产品的可选配置，如果不使用 `Redis`，则 `A8` 产品将使用内部缓存作为缓存。
+
+## Redis配置
+
+`Redis` 配置文件为 `application.yml`，配置项如下：
+
+```yaml
+spring:
+  # Redis 是可选的，需要启用Redis的Cache实现
+  redis:
+    host: 10.2.112.81
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+    timeout: 10000ms
+```    
+
+## 配置设置
+
+系统使用 `内存` 或者 `Redis` 的切换，通过 `application.yml` 中的 `ais.cache.clazz` 配置项来设置。
+
+```yaml
+ais: # A8配置
+  cache: # 缓存配置
+    # clazz: com.yonyouaud.commons.cache.impl.A8CacheManagerHolder
+    clazz: com.yonyouaud.ext.cache.A8RedisCacheHolder
+```
+
+- 本地内存缓存实现类 `com.yonyouaud.commons.cache.impl.A8CacheManagerHolder`
+- `Redis` 缓存实现类 `com.yonyouaud.ext.cache.A8RedisCacheHolder`

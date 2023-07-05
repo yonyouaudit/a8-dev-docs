@@ -1,0 +1,38 @@
+# Nacos配置
+
+`Nacos` 是 `A8数智化审计平台` 的可选配置方案，在集群部署的时候，建议使用 `Nacos`配置方式。
+
+> 如果没有使用 `Nacos`，则使用默认的 `application.yml` 的配置方式。
+
+`A8` 的 `Nacos` 配置文件在 `nacos.properties` 中，`Nacos` 配置文件内容如下：
+
+```txt
+serverAddr=10.2.112.92:38847
+dataId=DEFAULT
+group=DEFAULT_GROUP
+disabled=false
+```
+
+- `serverAddr`：`Nacos` 服务地址，格式为 `ip:port`，多个地址用逗号分隔
+- `dataId`：`Nacos` 配置文件的 `dataId`
+- `group`：`Nacos` 配置文件的 `group`
+- `disabled`：是否禁用 `Nacos` 配置，如果禁用，则使用默认的 `application.yml` 配置文件
+
+## 环境变量配置方式
+
+`A8` 也支持使用环境变量来定义 `Nacos` 配置，这种方式方便在 `Docker` 环境下使用。
+
+```shell
+export A8_NACOS_SERVER_ADDR=10.2.112.92:38847
+export A8_NACOS_DATA_ID=DEFAULT
+export A8_NACOS_GROUP=DEFAULT_GROUP
+```
+
+## 配置文件优先级
+
+`A8` 的配置文件优先级如下（由高至低）：
+
+- 环境变量
+- `-D` 参数
+- Nacos 配置
+- application.yml
