@@ -1,0 +1,70 @@
+# 登录扩展
+
+平台默认登录逻辑是基于系统数据库 `a_sys_user` 表的，如果你的系统用户信息来自其他系统，那么你需要自己实现登录逻辑，系统会在调用默认登录 `不通过` 后再调用扩展登录，如果扩展登录也不通过则登录失败。
+
+### 平台登录逻辑
+
+平台默认逻辑如代码所示 (所在包：product，实现类：com.yonyouaud.ais.service.impl.ManageServiceImpl)
+```java
+public UserInfo login(String username, String password, String tenantId) {
+        UserInfo result = userService.login(username, password, tenantId);
+        if (result == null) { // 默认认证逻辑不通过，查找是否有其他登录逻辑
+            result = loginActionsHandler(username, password, tenantId);
+            if (result != null) {
+                Utils.setUserInfoCache(result.getUserId(), result); // 如果是特殊登录逻辑，需要将用户信息缓存起来，这里后续也可以序列化到redis中或数据表中
+            }
+        }
+        return result;
+    }
+```
+
+核心的方法 `loginActionsHandler` 是脚本化环境，会从 `a_prod_groovyscripts` 数据表中查找 `scripttype=LoginAction` 的记录，并执行其 `Groovy` 脚本，
+脚本中需要实现 `com.yonyouaud.commons.user.LoginAction` 接口，接口中有一个 `login` 方法，该方法的返回值是 `UserInfo` 对象，如果返回 `null` 则表示登录失败，否则登录成功。
+
+```java
+public interface LoginAction {
+    UserInfo login(String username, String password, String tenantId);
+}
+```
+
+### 扩展登录逻辑
+
+操作路径： `开放平台` -> `后端脚本` 新增后端 `Groovy` 脚本，编写脚本实现 `com.yonyouaud.commons.user.LoginAction` 接口，如下所示：
+
+```groovy
+import com.yonyouaud.commons.user.LoginAction
+import com.yonyouaud.commons.user.UserInfo
+
+class MyLoginAction implements LoginAction {
+    @Override
+    UserInfo login(String username, String password, String tenantId) {
+        return new UserInfo(userId: '1', userName: 'admin', nickName: '管理员', role: [new RoleInfo(id: '1', roleName: '管理员', description: '管理员', groupId: '1')])
+    }
+}
+```
+
+其中类 `UserInfo` 和 `RoleInfo` 的定义如下：
+```java
+public class UserInfo {
+    private String userId;
+    private String userName;
+    private String nickName;
+    private String token;
+    private String groupId;
+    private String avatarUrl;
+    private List<RoleInfo> role;
+
+    //...
+}
+
+public class RoleInfo {
+    private String id;
+    private String roleName;
+    private String description;
+    private String groupId;
+
+    //...
+}
+```
+
+
