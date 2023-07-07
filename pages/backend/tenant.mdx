@@ -60,3 +60,5 @@ SELECT * FROM table_name WHERE 1=1 AND tenantId = '#FTENANTID#'
 - 数据源
 - 表单
 - 流程
+
+租户实现模块在 `product` 中，如果需要自定义租户实现，可以在 `product` 中实现 `TenantService` 接口，然后在 `application.yml` 中配置 `tenantService` 为自定义实现类。
