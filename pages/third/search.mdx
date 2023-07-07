@@ -1,0 +1,78 @@
+# 检索配置
+
+`A8数智化审计平台` 没有内置的全文检索实现，仅保留全文检索接口，具体实现可以使用第三方全文搜索引擎，如 `Elasticsearch`、`Zink` 等。
+
+`A8数智化审计平台` 默认支持的是 [Zink](https://zincsearch-docs.zinc.dev/)
+
+## 配置
+
+`Zink` 在A8平台中的配置如下：
+
+```yaml
+ais: # A8平台配置
+  search:
+    host: http://10.2.112.81:4080
+    clazz: com.yonyouaud.searcher.server.zinc.ZincSearcher
+```
+其中 `clazz` 为 `Zink` 的实现类，`host` 为 `Zink` 的地址。
+
+## 批量索引服务
+
+`A8数智化审计平台` 提供了批量索引服务，可以将审计数据批量索引到 `Zink` 中，在具备管理员角色的账户登录情况下，可以使用服务地址 `http://<A8平台地址>/ais/api/search/index` 进行批量索引。
+
+```http
+POST /ais/api/search/index?category=${category} HTTP/1.1
+Host: http://<A8平台地址>
+Content-Type: application/json
+
+[
+{
+    "title": "标题",
+    "subTitle": "子标题",
+    "category": "分类",
+    "content": "内容",
+    "action": "动作",
+    "id": "id",
+    "icon": "图标",
+    "remark": "备注",
+    "innerId": "内部id",
+    "ext": "扩展字段"
+},
+{...}
+]
+```
+
+> 请求体是一个JSON对象，其实就是 `List<FulltextItem>` 的JSON序列化结果，`FulltextItem` 的定义如下：
+
+```java
+public class FulltextItem {
+    private String title; // 标题
+    private String subTitle; // 子标题(二级标题)
+    private String category; // 分类
+    private String content; // 内容
+    private String action; // 动作
+    private String id; // id
+    private String icon; // 图标
+    private String remark; // 备注
+    private String innerId; // 内部id
+    private String ext; // 扩展字段
+    //...
+}
+```
+
+`A8数智化审计平台` 还提供一个 **内置** 的批量创建系统支持的全部资源的索引的服务，包括：表单、法规、案例、模型、功能信息。
+
+可以使用服务地址 `http://<A8平台地址>/ais/api/search/indexAll` 进行批量索引。
+
+```http
+GET /ais/api/search/indexAll HTTP/1.1
+```
+
+还有几个特定服务
+
+- `http://<A8平台地址>/ais/api/search/formIndex` 批量索引表单
+- `http://<A8平台地址>/ais/api/search/lawIndex` 批量索引法规
+- `http://<A8平台地址>/ais/api/search/caseIndex` 批量索引案例
+- `http://<A8平台地址>/ais/api/search/funcIndex` 批量索引功能
+
+> `indexAll` 其实在内部也是分别调用上述服务的，只是为了方便使用者，提供了一个统一的服务。

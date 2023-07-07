@@ -24,7 +24,8 @@
 新增一条租户信息
 
 ```http
-POST http://$HOST/ais/api/v1/super/tenant/add?name=${name}
+POST /ais/api/v1/super/tenant/add?name=${name} HTTP/1.1
+Host: http://<A8平台地址>
 ```
 
 ### 删除租户
@@ -32,7 +33,7 @@ POST http://$HOST/ais/api/v1/super/tenant/add?name=${name}
 删除一条租户信息
 
 ```http
-GET http://$HOST/ais/api/v1/super/tenant/delete?id=${id}
+GET http://$HOST/ais/api/v1/super/tenant/delete?id=${id} HTTP/1.1
 ```
 
 ## 使用租户机制
