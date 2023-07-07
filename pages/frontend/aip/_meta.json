@@ -1,5 +1,5 @@
 {
-    "AIPModule": "AIP-Module组件",
-    "AIPFormEngine": "AIP-FormEngine组件",
-    "AIPQueryModel": "AIP-QueryModel组件"
+    "aip-module": "AIP-Module组件",
+    "aip-formengie": "AIP-FormEngine组件",
+    "aip-querymodel": "AIP-QueryModel组件"
 }
