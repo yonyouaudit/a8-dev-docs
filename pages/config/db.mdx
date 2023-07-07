@@ -1,0 +1,107 @@
+# 数据库配置
+
+## 数据库类型
+
+`A8数智化审计平台` 默认支持的数据库是 `MariaDB` 和 `MySQL`，如果需要支持其他数据库，需要在 `pom.xml` 中添加对应的数据库依赖，然后在 `application.yml` 中配置对应的数据库连接信息。
+
+## 默认支持数据库信息
+
+- MariaDB 10.4.12
+- MySQL 8.0.27
+
+## 数据库适配开发注意点
+
+1. 数据库驱动载入，需要在 `pom.xml` 中引入相关数据库的 `jdbc` 依赖，例如 `A8`产品默认数据库依赖:
+
+```xml
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>${mysql.connector.version}</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+2. 数据库连接及方言配置，需要在 `application.yml` 中配置对应的数据库方言，例如 `A8`产品默认数据库方言配置:
+
+```yaml
+spring:
+  datasource: # --- MySQL/MariaDB ---
+    url: jdbc:mysql://${HOST}:${PORT}/a8dev?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&nullCatalogMeansCurrent=true
+    username: DEC:JwRdHb6r/Rf0jkb/6aJ3+A==
+    password: DEC:JwRdHb6r/Rf0jkb/6aJ3+A==
+    data: classpath:/init.sql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+
+  jpa:
+    database: MYSQL
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    # database: Oracle
+    # database-platform: org.hibernate.dialect.Oracle10gDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+```
+
+> 注意，配置文件中的 spring.datasource.username 和 spring.datasource.password 是经过加密的，如果需要修改数据库连接这部分信息，如果需要加密，可以加密后再加上`DEC:`前缀。
+
+## 数据库口令加密工具
+
+该工具是可选，需要引入 `A8数智化审计平台` 的 `security-cli` 模块（JAR包），然后执行 `java -jar security-cli.jar` 命令即可。
+
+> 该工具依赖 `hutool-all-5.4.4.jar`，需要将 `hutool-all-5.4.4.jar` 和 `security-cli.jar` 放在同一目录下。
+
+```shell
+java -jar security-cli.jar
+```
+会返回使用方法信息
+    
+```shell
+    $ java -jar security-cli.jar
+    A8 security cli
+    Usage: java -jar security-cli.jar [e|d] [string]
+```
+- e: 加密
+- d: 解密
+- string: 需要加密或解密的字符串
+
+例如，需要加密的字符串是 `123456`，则执行命令 `java -jar security-cli.jar e 123456`，会返回加密后的字符串
+
+```shell
+$ java -cp hutool-all-5.4.4.jar -jar security-cli.jar e 123456
+A8 security cli
+Encrypting...
+Result:
+KEgAhoIqboq3+PqagGPLAQ==
+```
+设置的时候，需要加上 `DEC:`前缀，如 `DEC:KEgAhoIqboq3+PqagGPLAQ==`
+
+## 数据库兼容性开发
+
+对于不同的数据库，还需要设置 `表单引擎` 的实现，必须实现接口 `com.yonyouaud.formengine.core.FormDefProcessor`，该接口将表单逻辑落实到具体数据库中，
+实现接口后，在 `application.yml` 中配置对应的实现类，例如 `A8`产品默认数据库配置:
+
+```yaml
+ais: # A8平台 配置
+  form-engine:
+    autoBackup: true
+    chain:
+      - com.yonyouaud.formengine.processor.mysql.MySQLProcessor
+
+    schemaSupport: com.yonyouaud.formengine.processor.mysql.MySQLSchemaSupport
+```
+
+> `com.yonyouaud.formengine.processor.mysql.MySQLProcessor` 就是 `com.yonyouaud.formengine.core.FormDefProcessor` 的具体实现。
+
+除了 `com.yonyouaud.formengine.core.FormDefProcessor` 接口，还需要实现 `com.yonyouaud.formengine.core.SchemaSupport` 接口，该接口用于支持数据库的一些字段映射类型转换。
+
+因为表单引擎支持的类型只有：
+- String
+- Integer
+- Double
+- Date
+
+这些类型，对于不同的数据库，需要做一些类型转换，比如 `String` 可能根据长度转换为 `varchar` 或 `text`，`Date` 可能转换为 `datetime` 或 `timestamp` 等等。
+
+这些接口都隶属于 `formengine-core` 模块，如果要实现自己的数据库适配，需要引入 `formengine-core` 模块，然后实现对应的接口。
