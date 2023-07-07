@@ -1,0 +1,102 @@
+# 全文检索配置
+
+`A8数智化审计平台` 没有内置的全文检索实现，仅保留全文检索接口，具体实现可以使用第三方全文搜索引擎，如 `Elasticsearch`、`Zink` 等。
+
+`A8数智化审计平台` 默认支持的是 [Zink](https://zincsearch-docs.zinc.dev/)
+
+## 配置
+
+`Zink` 在A8平台中的配置如下：
+
+```yaml
+ais: # A8平台配置
+  search:
+    host: http://10.2.112.81:4080
+    clazz: com.yonyouaud.searcher.server.zinc.ZincSearcher
+```
+其中 `clazz` 为 `Zink` 的实现类，`host` 为 `Zink` 的地址。
+
+> `com.yonyouaud.searcher.server.zinc.ZincSearcher` 实现了 `com.yonyouaud.searcher.server.FulltextSearchService` 接口
+
+## 接口
+
+`A8数智化审计平台` 提供了全文检索的接口 `com.yonyouaud.searcher.server.FulltextSearchService`，该接口在模块 `searcher` 中，具体接口声明如下：
+
+```java
+package com.yonyouaud.searcher.service;
+
+import com.yonyouaud.searcher.module.FulltextItem;
+import com.yonyouaud.searcher.module.FulltextSearchResponse;
+
+import java.util.List;
+
+public interface FulltextSearchService {
+    // 全文搜索
+    FulltextSearchResponse search(String query, String category, int page, int size);
+
+    // 获取所有分类
+    List<String> listCategories();
+
+    // 全文索引
+    void index(String category, List<FulltextItem> items);
+
+    // 删除索引数据
+    boolean remove(String category);
+    boolean remove(String category, List<String> ids);
+}
+```
+
+> 全文搜索结果是 `各个具体实现` 方式排序方式排序的，`A8` 是按照 `相关度` 默认排序的，且不可设置排序方式
+
+## 索引对象 `FulltextItem`
+
+`FulltextItem` 是一个索引对象，用于描述一个全文索引的对象，具体定义如下：
+
+```java 
+public class FulltextItem {
+    private String title; // 标题
+    private String subTitle; // 子标题(二级标题)
+    private String category; // 分类
+    private String content; // 内容
+    private String action; // 动作
+    private String id; // id
+    private String icon; // 图标
+    private String remark; // 备注
+    private String innerId; // 内部id
+    private String ext; // 扩展字段
+    //...
+}
+```    
+各字段的含义如下：
+- `title`：标题
+- `subTitle`：子标题(二级标题)
+- `category`：分类，在 `Zink` 中作为`逻辑数据库` 来使用
+- `content`：内容
+- `action`：动作，用于描述点击该全文搜索结果后的动作，如 `open`、`openTab`、`openWindow`、`openDialog` 等
+- `id`：id
+- `icon`：图标，显示结果时的图标
+- `remark`：备注
+- `innerId`：内部id
+- `ext`：扩展字段，可以存放需要额外存储的字段，如 `url` 等
+
+## 全文搜索结果 `FulltextSearchResponse`
+
+`FulltextSearchResponse` 是一个全文搜索结果对象，用于描述全文搜索的结果，具体定义如下：
+
+```java
+public class FulltextSearchResponse {
+    private long total;
+    private String query;
+    private List<FulltextItem> items;
+    //...
+}
+```
+
+各字段的含义如下：
+- `total`：总数结果总数
+- `query`：查询关键字或表达式
+- `items`：结果列表
+
+## 全文搜索表达式
+
+全文检索表达式是一个字符串，用于描述全文检索的条件，具体细节请参考 `Zink` 的文档。但标准的 `全文检索表达式` 都是兼容的，详细的表达式说明可以参考 [全文搜索引擎-进阶与实战Elasticsearch](https://juejin.cn/post/7128958332450111495) 的文档。
