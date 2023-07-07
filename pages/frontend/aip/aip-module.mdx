@@ -130,11 +130,13 @@ msg: "success"
 
 表格组件
 
+```javascript
 @class AIPTable
 
 @extends {Component}
 
 @description 对于IUAP表格的封装
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
@@ -162,11 +164,13 @@ getSelectedDataFunc** |  | selectedList: `List` , record: `Object` , index: `Num
 
 AIP参照搜索框组件
 
+```javascript
 @class AIPSearchPanel
 
 @extends { Component }
 
 @description 配合参照设计显示搜索条件框
+```
 
 ### 涉及数据结构 ###
 
@@ -251,32 +255,30 @@ AIP参照搜索框组件
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
-**appendSpecialParam** | `Function` |  | :x: | 初始化特殊参数 appendSpecialParam(): Map 返回特殊参数对象，如果没有，返回 null
+**appendSpecialParam** | `Function` |  | :x: | 初始化特殊参数 `appendSpecialParam(): Map` 返回特殊参数对象，如果没有，返回 null
 **cleanBtnText** | `String` |  | :x: | 清除按钮显示内容(默认是"重置")
 **disableClear** | `Boolean` |  | :x: | 是否禁止显示清除按钮（默认false）
 **
-doSearch** | `Function` |  | :white_check_mark: | 点击`查询`按钮触发的事件，会将目前的参照对象内容传递给参数 doSearch(params: Map{key(String): value(String)}): void
+doSearch** | `Function` |  | :white_check_mark: | 点击`查询`按钮触发的事件，会将目前的参照对象内容传递给参数 `doSearch(params: Map{key(String): value(String)}): void`
 **encryption** | `Boolean` |  | :x: | 参数是否启用加密传输
-**fetchCallback** | `Function` |  | :x: | 每个参照请求完毕调用的回调，参数(data, condition, url)
-**loadCacheFn** | `Function` |  | :x: | 条件缓存载入回调函数 (id): Promise 返回的**
+**fetchCallback** | `Function` |  | :x: | 每个参照请求完毕调用的回调，参数`(data, condition, url)`
+**loadCacheFn** | `Function` |  | :x: | 条件缓存载入回调函数 `(id): Promise` 返回的**
 Promise**，其中参数为 `Map{key(String): value(String)}` 该参数与 `search` 方法的参数应该是**相同**的
 **
-loadedfunc** | `Function` |  | :x: | 参照信息请求完毕后的事件回调,参数为(immediateSearch: bool) 在没有参照项的情况下，immediateSearch=true会告知立即进行检索，在有参照项的情况下，不会传递该参数
+loadedfunc** | `Function` |  | :x: | 参照信息请求完毕后的事件回调,参数为`(immediateSearch: bool)` 在没有参照项的情况下，`immediateSearch=true`会告知立即进行检索，在有参照项的情况下，不会传递该参数
 **
-prefixUrl** | `String` |  | :white_check_mark: | 所有参照服务的请求路径，如果没有设置，将使用默认值(WINDOW_HOST.protocol + '//' + WINDOW_HOST.host + '/qa/refrence/getrefrence?id=')
+prefixUrl** | `String` |  | :white_check_mark: | 所有参照服务的请求路径，如果没有设置，将使用默认值`(WINDOW_HOST.protocol + '//' + WINDOW_HOST.host + '/qa/refrence/getrefrence?id=')`
 **refid** | `String` |  | :white_check_mark: | 参照编号
 **searchBtnText** | `String` |  | :x: | 查询按钮显示内容(默认是"查询")
 **
-service** | `PropTypes.map` |  | :x: | 注入的服务 { loadRefrence: (url/refid): Promise (response) 整个参照系载入的异步数据方法，返回标准response返回 componentName: (url/id, params): Promise (response) 每个组件载入数据的异步方法，返回标准response返回，每个组件的loadData会调用该方法 }
+service** | `PropTypes.map` |  | :x: | 注入的服务 `{ loadRefrence: (url/refid): Promise (response)` 整个参照系载入的异步数据方法，返回标准response返回 `componentName: (url/id, params): Promise (response)` 每个组件载入数据的异步方法，返回标准response返回，每个组件的loadData会调用该方法 
 
 -----------
 
 method | return type | params | description
 ---- | ---- | ------- | -----------
-**registComponent** |  | componentName: `String` , componentClass: `Class`  | 注册新的组件，如果已存在，将覆盖原有组件实现
-**getRegistedComponents** | `Map` |  | 获取参照系统已经注册的组件信息
-
-返回Map为 {compnentName: componentClass}
+**registComponent** |  | `componentName: String` , `componentClass: Class`  | 注册新的组件，如果已存在，将覆盖原有组件实现
+**getRegistedComponents** | `Map` |  | 获取参照系统已经注册的组件信息返回Map为 `{compnentName: componentClass}`
 **_buildRefParams** | `Object` : 返回依赖相关的参数 | name: `String` (参照的名称), needFields:  | 构建依赖参照需要的参数对象 ***(私有方法)***
 **appendParam** | | paramKey: `String` (加入参数的名称), paramValue: `String` (加入的参数值) | 给参照提供必要的参数
 **_buildRefDepends** | `Array` | name: `String` (条件名), refrenceItems: `Array` (所有参照对象列表), cSet: `Set` (各个条件的参照表) |
@@ -290,7 +292,7 @@ method | return type | params | description
 **_loadRefrences** | | params:  | 载入（初始化）参照 ***(私有方法)***
 **_installServices** | | | 注册全局服务，暴露部分信息到浏览器以便外部了解组件当前信息 ***(私有方法)***
 **_uninstallServices** | | |  ***(私有方法)***
-**getParams** | `Object` : 返回参数，可能值为 null或者{paramKey1: paramValue, ...} | ignoreMust: `Boolean` (
+**getParams** | `Object` : 返回参数，可能值为 null或者`{paramKey1: paramValue, ...}` | ignoreMust: `Boolean` (
 是否忽略必选，如果为true，将返回目前已选的条件信息，如果为false，有必选条件未选将返回null) | 获取当前状态选取的参数
 **search** | | e: `Event` (可选参数) | 检索
 **reload** | | | 重新载入所有参照数据
@@ -301,12 +303,13 @@ method | return type | params | description
 ## RefItem
 
 基类提供每个参照项的基本处理例程和数据结构
-
+```javascript
 @class RefItem
 
 @extends { Component }
 
 @description 所有的参照项组件的基类，每个对象的基本属性如下
+```
 
 ~~~javascript
        {
@@ -361,18 +364,18 @@ method | return type | params | description
 ,
 ~~~
 
-prop | type | default | required | description
----- | :----: | :-------: | :--------: | -----------
-**defaultValue** | `String` |  | :x: | 默认值
-**fetchCallback** | `Function` |  | :x: | 获取数据后调用的通知回调
-**id** | `String` |  | :white_check_mark: | 参照项编号
-**key** | `String` |  | :white_check_mark: | 组件Key
-**label** | `String` |  | :x: | 参照项显示标签（优先与 `name` 属性作为参照标题显示值）
-**name** | `String` |  | :white_check_mark: | 参照项名称
-**refItemValueChange** | `Function` |  | :x: | 参照值变化的回调 (name: String, plainValue: String, value: Object)
-**refitem** | `Array` |  | :white_check_mark: | 依赖参照
-**type** | `String` |  | :white_check_mark: | 参照项类型
-**width** | `Number` |  | :x: | 参照项组件宽度(默认200px)
+| prop | type | default | required | description |
+| ---- | :----: | :-------: | :--------: | ----------- |
+| **defaultValue** | `String` |  | :x: | 默认值 |
+| **fetchCallback** | `Function` |  | :x: | 获取数据后调用的通知回调 |
+| **id** | `String` |  | :white_check_mark: | 参照项编号 |
+| **key** | `String` |  | :white_check_mark: | 组件Key |
+| **label** | `String` |  | :x: | 参照项显示标签（优先与 `name` 属性作为参照标题显示值） |
+| **name** | `String` |  | :white_check_mark: | 参照项名称 |
+| **refItemValueChange** | `Function` |  | :x: | 参照值变化的回调 `(name: String, plainValue: String, value: Object)` |
+| **refitem** | `Array` |  | :white_check_mark: | 依赖参照 |
+| **type** | `String` |  | :white_check_mark: | 参照项类型 |
+| **width** | `Number` |  | :x: | 参照项组件宽度(默认200px) |
 
 -----------
 
@@ -383,10 +386,12 @@ method | return type | params | description
 **getName** | `String` |  | 返回当前参照名称
 **getLabel** | `String` |  | 返回当前参照显示标题
 **clear** |  |  | 清空操作，子类需要 **override**
-**loadData** |  | params: `Object` (依赖的参数 {K:V} 对象), defaultValue: `String` (***
-可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
+**loadData** |  | params: `Object` (依赖的参数 `{K:V}` 对象), defaultValue: `String` (***可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
+**getValue** | `String` | | 获取值，按需 **override**
+**setDefaultValue** | | value: `Object`  | 设置组件的默认值(可以随时调用) **override** 默认会赋值给 `state.value`
 
-如果有`defaultValue`必须调用
+
+loadData 如果有`defaultValue`必须调用
 
 ~~~javascript
 // async or sync get load from remote or local
@@ -397,19 +402,16 @@ if (defaultValue) {
 
 ~~~
 
-**getValue** | `String` | | 获取值，按需 **override**
-**setDefaultValue** | | value: `Object`  | 设置组件的默认值(可以随时调用) **override**
-默认会赋值给 `state.value`
-
 ## TextRef
 
 文本类型的参照项是没有依赖参照的
-
+```javascript
 @class TextRef
 
 @extends { RefItem }
 
 @description 纯输入参照组件
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
@@ -425,18 +427,19 @@ method | return type | params | description
 ---- | ---- | ------- | -----------
 **clear** |  |  | 重置值 **override**
 **_onChange** |  | value: `String`  | 值发生变化调用 ***(私有方法)***
-**loadData** |  | params: `Object` (依赖的参数 {K:V} 对象), defaultValue: `String` (***
-可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
+**loadData** |  | params: `Object` (依赖的参数 `{K:V}` 对象), defaultValue: `String` (***可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
 
 ## NumberPlainRef
 
 更简单的数值类型的参照项
 
+```javascript
 @class NumberPlainRef
 
 @extends { RefItem }
 
 @description 数值显示组件，可输入且会验证输入
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
@@ -452,18 +455,19 @@ method | return type | params | description
 ---- | ---- | ------- | -----------
 **clear** |  |  | 重置值 **override**
 **_onChange** |  | value: `Number`  | 值发生变化调用 ***(私有方法)***
-**loadData** |  | params: `Object` (依赖的参数 {K:V} 对象), defaultValue: `String` (***
-可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
+**loadData** |  | params: `Object` (依赖的参数 `{K:V}` 对象), defaultValue: `String` (***可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
 
 ## NumberRef
 
 数值类型的参照项与文本类型参照一样，没有依赖参照
 
+```javascript
 @class NumberRef
 
 @extends { RefItem }
 
 @description 数值显示组件（包含+/-箭头）
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
@@ -479,25 +483,26 @@ method | return type | params | description
 ---- | ---- | ------- | -----------
 **clear** |  |  | 重置值 **override**
 **_onChange** |  | value: `Number`  | 值发生变化调用 ***(私有方法)***
-**loadData** |  | params: `Object` (依赖的参数 {K:V} 对象), defaultValue: `String` (***
-可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
+**loadData** |  | params: `Object` (依赖的参数 `{K:V}` 对象), defaultValue: `String` (***可选*** 默认值，如果有默认值，需要在`loadData`后设置设置关联值，再调用`refItemValueChange`通知调度器) | 获取数据的方法，会被调度系统触发 ** 每个子类必须实现 **
 
 ## SelectRef
 
 下拉列表参照项组件
 
+```javascript
 @class SelectRef
 
 @extends { RefItem }
 
 @description 下拉列表组件，支持选择时间（年度，月份），是/否等情况
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
 **defaultValue** | `String` |  | :x: | 初始值
 **displayfield** | `String` |  | :white_check_mark: | 返回值对象，显示字段名称
 **
-fetchCallback** | `Function` |  | :x: | 数据返回后回调（只有在网络请求的情况下会触发） fetchCallback(data: Array, condition: Map, url: String)
+fetchCallback** | `Function` |  | :x: | 数据返回后回调（只有在网络请求的情况下会触发） `fetchCallback(data: Array, condition: Map, url: String)`
 **id** | `String` |  | :white_check_mark: | 参照项编号
 **multiple** | `String` |  | :x: | 是否允许多选，无值或者'0'表示不允许
 **name** | `String` |  | :white_check_mark: | 参照项名称
@@ -541,28 +546,30 @@ method | return type | params | description
 
 多选框参照组件
 
+```javascript
 @class CheckRef
 
 @extends { RefItem }
 
 @description 复选框组件
+```
 
-prop | type | default | required | description
----- | :----: | :-------: | :--------: | -----------
-**defaultValue** | `String` |  | :x: | 默认值
-**displayfield** | `String` |  | :white_check_mark: | 显示字段名
-**fetchCallback** | `Function` |  | :x: | 请求数据后回调
-**id** | `String` |  | :x: | 请求的id
-**options** | `Array` |  | :x: | 在设置静态Option的情况下,直接设置的对象列表
-**url** | `String` |  | :x: | 请求路径
-**valuefield** | `String` |  | :white_check_mark: | 实际值字段名
-**width** | `Number` |  | :x: | 组件宽度
+| prop | type | default | required | description | 
+| ---- | :----: | :-------: | :--------: | ----------- | 
+| **defaultValue** | `String` |  | :x: | 默认值 | 
+| **displayfield** | `String` |  | :white_check_mark: | 显示字段名 | 
+| **fetchCallback** | `Function` |  | :x: | 请求数据后回调 | 
+| **id** | `String` |  | :x: | 请求的id | 
+| **options** | `Array` |  | :x: | 在设置静态Option的情况下,直接设置的对象列表 | 
+| **url** | `String` |  | :x: | 请求路径 | 
+| **valuefield** | `String` |  | :white_check_mark: | 实际值字段名 | 
+| **width** | `Number` |  | :x: | 组件宽度 | 
 
 -----------
 
 method | return type | params | description
 ---- | ---- | ------- | -----------
-**_prepareData** | `Array` | arr: `Array` (原始数组) | 转换数据为{label: value}的数组 ***(私有方法)***
+**_prepareData** | `Array` | arr: `Array` (原始数组) | 转换数据为`{label: value}`的数组 ***(私有方法)***
 **_loadData** |  |  | 远程请求数据 ***(私有方法)***
 **refChange** |  | n: `String` , v: `String`  | 参照条件变化后通知，接收参数名称和值 **override**
 **clear** |  |  | 重置值 **override**
@@ -573,11 +580,13 @@ method | return type | params | description
 
 单选参照组件
 
+```javascript
 @class RadioRef
 
 @extends { RefItem }
 
 @description 多个值单选情况使用
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
@@ -594,7 +603,7 @@ prop | type | default | required | description
 
 method | return type | params | description
 ---- | ---- | ------- | -----------
-**_prepareData** | `Array` | arr: `Array` (原始数组) | 转换数据为{label: value}的数组 ***(私有方法)***
+**_prepareData** | `Array` | arr: `Array` (原始数组) | 转换数据为`{label: value}`的数组 ***(私有方法)***
 **_loadData** |  |  | 远程请求数据 ***(私有方法)***
 **refChange** |  | n: `String` , v: `String`  | 参照条件变化后通知，接收参数名称和值 **override**
 **clear** |  |  | 重置值 **override**
@@ -604,17 +613,18 @@ method | return type | params | description
 
 表格参照组件
 
+```javascript
 @class TableRef
 
 @extends { RefItem }
 
 @description 弹出表格组件
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
 **defaultValue** | `String` |  | :x: | 默认值
-**
-fetchCallback** | `Function` |  | :x: | 数据返回后回调（只有在网络请求的情况下会触发） fetchCallback(data: Array, condition: Map, url: String)
+**fetchCallback** | `Function` |  | :x: | 数据返回后回调（只有在网络请求的情况下会触发） `fetchCallback(data: Array, condition: Map, url: String)`
 **id** | `String` |  | :white_check_mark: | 参照项编号
 **label** | `String` |  | :x: | 标题
 **matchData** | `Array` |  | :x: | 默认选择的记录
@@ -648,21 +658,23 @@ method | return type | params | description
 
 树形组件
 
+```javascript
 @class TreeRef
 
 @extends { RefItem }
 
 @description 弹出表格组件
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
 **defaultValue** | `String` |  | :x: | 默认值
 **
-fetchCallback** | `Function` |  | :x: | 数据返回后回调（只有在网络请求的情况下会触发） fetchCallback(data: Array, condition: Map, url: String)
+fetchCallback** | `Function` |  | :x: | 数据返回后回调（只有在网络请求的情况下会触发） `fetchCallback(data: Array, condition: Map, url: String)`
 **id** | `String` |  | :white_check_mark: | 参照项编号
 **label** | `String` |  | :x: | 标题
 **matchData** | `Array` |  | :x: | 默认选择的记录
-**multiple** | `String` |  | :x: | 是否多选(null or '0')
+**multiple** | `String` |  | :x: | 是否多选`(null or '0')`
 **name** | `String` |  | :white_check_mark: | 参照项名称
 **type** | `String` |  | :white_check_mark: | 参照项类型
 **url** | `String` |  | :x: | 请求路径
@@ -675,16 +687,7 @@ method | return type | params | description
 **canClickGoOn** | `Boolean` |  | 当点击文本框右侧弹出按钮时是否打开modal适用于级联情况下当选择不全时的处理
 **processOrgs** | `Tree` | orgs: `Array`  | 将列表数据转换为树结构数据
 **_treeDataToFlat** | `Array` | treeData: `Array`  | 将树对象（包含子节点）列表转为一维列表 ***(私有方法)***
-**loadData** |  | params: `Object` , defaultValue: `String`  | 获取数据
-
-value: '{"refname":"xx集团;yy集团","refpk":"001;002"}',
-matchData: [{ name: 'xx集团', refname: 'xx集团', code: '001' }, { name: 'yy集团', refname: 'yy集团', code: '002' }],
-
-treeData:
-{ name: 'xxx', refname: 'xxx', code: '001', refpk: '001', childrens: [
-{ name, refname, code, refpkm }, {}, ...
-]
-}
+**loadData** |  | params: `Object` , defaultValue: `String`  | 获取数据 `value: '{"refname":"xx集团;yy集团","refpk":"001;002"}',matchData: [{ name: 'xx集团', refname: 'xx集团', code: '001' }, { name: 'yy集团', refname: 'yy集团', code: '002' }],treeData:{ name: 'xxx', refname: 'xxx', code: '001', refpk: '001', childrens: [{ name, refname, code, refpkm }, {}, ...]}`
 **onSave** | | results: `Array`  | 点击树组件的"确定"按钮触发时间
 **buildValue** | `Array` | items: `Array`  | 将请求数据转为组件所需数据格式
 **valueChange** | | results: `Array`  | 数据选择发生变化触发例程
@@ -697,16 +700,17 @@ treeData:
 
 字段过滤对话框
 
+```javascript
 @description 提供字段过滤操作 @class FieldsFilter @extends { Component }
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
 **close** | `Function` |  | :x: | 关闭对话框事件
-**columns** | `Array` |  | :x: | 字段信息  [{key, title}, ...]
+**columns** | `Array` |  | :x: | 字段信息  `[{key, title}, ...]`
 **doClean** | `Function` |  | :x: | 清空条件事件
-**
-doSearch** | `Function` |  | :x: | 点击搜索事件 doSearch(params) params: [{"field":"field1","assign":"==","value":"111"},{"andor":"&&", "field":"field2","assign":">","value":"222"}]
-**filterParam** | `Array` |  | :x: | 已存在的过滤条件  [{ andor, leftQ, field, assign, value, rightQ},...]
+**doSearch** | `Function` |  | :x: | 点击搜索事件 `doSearch(params) params: [{"field":"field1","assign":"==","value":"111"},{"andor":"&&", "field":"field2","assign":">","value":"222"}]`
+**filterParam** | `Array` |  | :x: | 已存在的过滤条件  `[{ andor, leftQ, field, assign, value, rightQ},...]`
 **show** | `Boolean` |  | :white_check_mark: | 是否显示对话框
 **title** | `String` |  | :x: | 过滤对话框标题
 
@@ -715,7 +719,7 @@ doSearch** | `Function` |  | :x: | 点击搜索事件 doSearch(params) params: [
 method | return type | params | description
 ---- | ---- | ------- | -----------
 **
-open** |  | columns: `Array` (字段信息 [{key, title}, ...]), filters: `Array` (已存在的过滤条件 [{ andor, leftQ, field, assign, value, rightQ},...]) | 打开字段过滤器
+open** |  | columns: `Array` (字段信息 `[{key, title}, ...]`), filters: `Array` (已存在的过滤条件 `[{ andor, leftQ, field, assign, value, rightQ},...]`) | 打开字段过滤器
 **close** |  |  | 关闭过滤器对话框
 **doSearch** |  |  | 过滤触发事件调用
 **doClean** |  |  | 清除事件调用
@@ -724,23 +728,25 @@ open** |  | columns: `Array` (字段信息 [{key, title}, ...]), filters: `Array
 
 行列互换设置对话框
 
+```javascript
 @class {CrossRotate}
 
 @extends {Component}
 
 @description 弹出行列互换设置对话框
+```
 
 prop | type | default | required | description
 ---- | :----: | :-------: | :--------: | -----------
 **close** | `Function` |  | :x: | 关闭转置设置对话框
-**colFields** | `Array` |  | :x: | 传入的作为列的字段信息列表(列字段列表) [{key, title}, ...]
-**fields** | `Array` |  | :x: | 传入所有的字段信息列表(备选字段列表) [{key, title}, ...]
-**ok** | `Function` |  | :x: | 确定回调事件 ok({ fields, valueFields, colFields, rowFields})
+**colFields** | `Array` |  | :x: | 传入的作为列的字段信息列表(列字段列表) `[{key, title}, ...]`
+**fields** | `Array` |  | :x: | 传入所有的字段信息列表(备选字段列表) `[{key, title}, ...]`
+**ok** | `Function` |  | :x: | 确定回调事件 `ok({ fields, valueFields, colFields, rowFields})`
 **remove** | `Function` |  | :x: | 删除转置关系回调 remove()
-**rowFields** | `Array` |  | :x: | 传入的作为行的字段信息列表(行字段列表) [{key, title}, ...]
+**rowFields** | `Array` |  | :x: | 传入的作为行的字段信息列表(行字段列表) `[{key, title}, ...]`
 **show** | `Boolean` |  | :white_check_mark: | 是否显示
 **title** | `String` |  | :x: | 标题，默认为：行列互换设置
-**valueFields** | `Array` |  | :x: | 传入的作为值的字段信息列表(值字段列表) [{key, title}, ...]
+**valueFields** | `Array` |  | :x: | 传入的作为值的字段信息列表(值字段列表) `[{key, title}, ...]`
 
 -----------
 
