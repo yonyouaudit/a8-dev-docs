@@ -13,32 +13,38 @@
 原有类：
 ```java
 
-package com.example.demo.service;
+package com.yonyouaud.formengine.service.impl;
 
+// ...
 @Service
-public class OriginService {
-
-    public void doSomething() {
-        // ...
-    }
-
+@ConnectorClient
+@Lazy
+public class FormEngineServiceImpl implements FormEngineService {
     // ...
 }
 ```
 
 扩展类：
 ```java
-package com.example.demo.service;
 
 @Service // 注意这里，使用 @Service 注解扩展的服务类
-public class ExtendService extends OriginService {
+@Primary // 注意这里，使用 @Primary 来提高优先级，系统默认服务均未使用 @Primary 注解，留给扩展的服务使用
+@ConnectorClient
+@Lazy
+public class ExtFEService extends FormEngineServiceImpl {
+    private static final Logger log = LoggerFactory.getLogger(ExtFEService.class);
 
-    @Override
-    public void doSomething() { // 重写原有的方法
-        // ...
+    public ExtFEService(FormEngineDAO formEngineDAO, FormActionDAO formActionDAO,
+            FormEngineProperties formEngineProperties, GroovyScriptDAO groovyScriptDAO, Producer<String> producer) {
+        super(formEngineDAO, formActionDAO, formEngineProperties, groovyScriptDAO, producer);
+        log.info("**********  ExtFEService init  **********");
     }
 
-    // ... 其他方法保持不变
+    @Override
+    public Map<String, Object> formDataGetAction(FormDefinition formDefinition, String id, String ext) { // 重写原有的方法
+        log.info("**********  ExtFEService formDataGetAction  **********");
+        return super.formDataGetAction(formDefinition, id, ext);
+    }
 }
 ```
 
@@ -48,13 +54,18 @@ public class ExtendService extends OriginService {
 
 package com.yonyouaud.ais;
 
+
 @EnableCaching
 @EnableOpenApi
 @EnableRestResult
 @EnableJpaAuditing
+@ComponentScan(basePackages = { "com.yonyouaud" }, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { RedisCacheImpl.class,
+                LiHanSirCloudAutoConfiguration.class }),
+        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.yonyouaud.formengine.service.impl.FormEngineServiceImpl") })  // 注意这里，屏蔽原有的服务类
 @EnableJpaRepositories(basePackages = { "com.yonyouaud" })
 @EntityScan(basePackages = { "com.yonyouaud", "com.yonyouaud.commons" })
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, OriginService.class }) // 注意这里，屏蔽原有的服务类
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class AISApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
