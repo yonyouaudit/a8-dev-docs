@@ -4,5 +4,6 @@
     "jobs": "定时任务模块",
     "login-ext": "登录扩展",
     "tenant": "租户机制",
-    "patch": "补丁机制"
+    "patch": "补丁机制",
+    "ext-service": "扩展服务"
 }
