@@ -1,5 +1,6 @@
 {
     "storage": "存储服务",
     "search": "搜索服务",
-    "onlyoffice": "OnlyOffice服务"
+    "onlyoffice": "OnlyOffice服务",
+    "kubernetes": "Kubernetes核心概念"
 }
