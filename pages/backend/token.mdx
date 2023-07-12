@@ -104,7 +104,7 @@ String jwtToken = JwtTokenUtil.generateToken(userInfo, secret, validity);
 
 ## `Token` 应用
 
-`A8` 中是不需要明确调用或者获取 `Token` 的，可以通过 `Utils` 类中的 `getUserId` 方法直接获取当前请求的用户信息。通过调用 `getTenantId` 方法获取当前请求的租户信息。
+`A8` 中是不需要明确调用或者获取 `Token` 的，可以通过 `Utils` 类中的 `getUserId()` 方法直接获取当前请求的用户信息，并通过调用 `getTenantId(userId)` 方法获取当前请求的租户信息。
 
 如下示例代码：
 ```java
