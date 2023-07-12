@@ -6,5 +6,5 @@
     "tenant": "租户机制",
     "patch": "补丁机制",
     "ext-service": "扩展服务",
-    "token": "token机制"
+    "token": "Token机制"
 }

@@ -1,2 +1,36 @@
 # 关于A8数智化审计平台开发者文档
 
+`A8数智化审计平台开发者文档` 是由 `审友数治科技有限公司` 维护的 `A8数智化审计平台` 的开发者文档。
+
+## 项目结构
+
+整个文档分为两部分：
+
+- 文档系统，该系统是来自开源项目 [nextra](https://nextra.site/)
+- Docker 镜像，该镜像是基于 `node:latest` 进行构建的，用于在本地进行文档系统部署，镜像地址: [hub.yonyouaud.com/a8/nextra:latest](hub.yonyouaud.com/a8/nextra:latest)
+
+## 运行项目
+
+支持 `Docker` 和 `Node` 两种方式运行项目。
+
+### Docker
+
+```bash
+docker run -d --rm -p 3100:3100 \
+  -e GIT_URL='https://username:password@git.yonyouaud.com/a8/a8-dev-docs.git' \
+  -e GIT_BRANCH='master' \
+  hub.yonyouaud.com/a8/nextra:latest
+```
+
+### Node
+
+```bash
+npm install
+npm run dev
+```
+
+## 文档项目仓库
+
+[https://git.yonyouaud.com/a8/a8-dev-docs](https://git.yonyouaud.com/a8/a8-dev-docs)
+
+> 该仓库为私有仓库，需要权限才能访问。

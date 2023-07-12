@@ -8,7 +8,9 @@
 
 ## 扩展已有的服务步骤
 
-### 1. 找到 `Spring Boot` 中原有的服务类，并继承扩展它，例如：
+### 1. 扩展类
+
+找到 `Spring Boot` 中原有的服务类，并继承扩展它，例如：
 
 原有类：
 ```java
@@ -48,7 +50,9 @@ public class ExtFEService extends FormEngineServiceImpl {
 }
 ```
 
-### 2. 在 `Spring Boot` 的启动类中，屏蔽原有的服务类，例如：
+### 2. 屏蔽原有服务
+
+在 `Spring Boot` 的启动类中，屏蔽原有的服务类，例如：
 
 ```java
 
