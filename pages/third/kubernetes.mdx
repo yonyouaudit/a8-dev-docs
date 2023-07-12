@@ -1,45 +1,43 @@
 # Kubernetes 核心概念
 
-## 一、kubernetes核心概念
-
 ### 1.1 Pod
 
-Pod 是可以在 Kubernetes 中创建和管理的、最小的可部署的计算单元。
-Pod就像豌豆荚一样，其中包含着一组（一个或多个）容器；这些容器共享存储、网络、以及怎样运行这些容器的声明。
+`Pod` 是可以在 `Kubernetes` 中创建和管理的、最小的可部署的计算单元。
+`Pod` 就像豌豆荚一样，其中包含着一组（一个或多个）容器；这些容器共享存储、网络、以及怎样运行这些容器的声明。
 
 Pod就像一台物理服务器一样，其中包含一个或多个应用容器，这些容器中运行着用户应用程序。
 
-**举例说明Pod、Container、应用程序三者之间的关系：麻屋子,红帐子,里面住着白胖子。Pod就是麻屋子,Container就是红帐子,应用程序就是里面的白胖子。**
+*举例说明 Pod、Container、应用程序三者之间的关系：麻屋子,红帐子,里面住着白胖子。Pod 就是麻屋子, Container 就是红帐子,应用程序就是里面的白胖子。*
 
 
 ### 1.2 Controller
 
-在 Kubernetes 中，用于管理和运行Pod的对象
-在 Kubernetes 中，控制器通过监控集群的公共状态，并致力于将当前状态转变为期望的状态
+在 `Kubernetes` 中，用于管理和运行Pod的对象
+在 `Kubernetes` 中，控制器通过监控集群的公共状态，并致力于将当前状态转变为期望的状态
 
-**举例说明Controller(控制器)作用：房间里的温度自动调节器**
+*举例说明 `Controller` (控制器)作用：房间里的温度自动调节器*
 
-**当你设置了温度，告诉了温度自动调节器你的*期望状态（Desired State）*。房间的实际温度是*当前状态（Current State）*。 通过对设备的开关控制，温度自动调节器让其当前状态接近期望状态。**
+当你设置了温度，告诉了温度自动调节器你的 *期望状态（Desired State）*。房间的实际温度是 *当前状态（Current State）*。 通过对设备的开关控制，温度自动调节器让其当前状态接近期望状态。
 
-一个控制器至少追踪一种类型的 Kubernetes 资源。这些对象有一个代表期望状态的 `spec` 字段。该资源的控制器负责确保其当前状态接近期望状态。
+一个控制器至少追踪一种类型的 `Kubernetes` 资源。这些对象有一个代表期望状态的 `spec` 字段。该资源的控制器负责确保其当前状态接近期望状态。
 
 不同的类型的控制器所实现的控制方式不一样，例如：
 ```text
  - deployment
   - 部署无状态应用
-  - 部署无状态应用: 认为pod 都一样，没有顺序要求， 不用考虑在哪个node 运行，随意进行扩展和伸缩
-  - 管理Pod和ReplicaSet
+  - 部署无状态应用: 认为 `Pod` 都一样，没有顺序要求，不用考虑在哪个 `Node` 运行，随意进行扩展和伸缩
+  - 管理 `Pod` 和 `ReplicaSet`
   - 部署、滚动升级等
-  - 典型的像web服务、分布式服务等
+  - 典型的像 `Web` 服务、分布式服务等
  - StatefulSet
   - 部署有状态应用
-  - 有状态应用，每个pod 都独立运行，保持pod 启动顺序和唯一性； 有唯一的网络标识符，持久存储； 有序，比如mysql 主从；主机名称固定。 而且其扩容以及升级等操作也是按顺序进行的操作。
+  - 有状态应用，每个 `Pod` 都独立运行，保持 `Pod` 启动顺序和唯一性；有唯一的网络标识符，持久存储；有序，比如 `MySQL` 主从；主机名称固定。而且其扩容以及升级等操作也是按顺序进行的操作。
  - DaemonSet
   - 部署守护进程
-  - DaemonSet保证在每个Node上都运行一个容器副本，常用来部署一些集群的日志、监控或者其他系统管理应用。新加入的node 也同样运行在一个pod 里面。
- - job
+  - `DaemonSet` 保证在每个 `Node` 上都运行一个容器副本，常用来部署一些集群的日志、监控或者其他系统管理应用。新加入的 `Node` 也同样运行在一个 `Pod` 里面。
+ - Job
   - 一次性任务
-  - Job负责批量处理短暂的一次性任务 (short livedone-off tasks)，即仅执行一次的任务，它保证批处理任务的一个或多个Pod成功结束。
+  - `Job` 负责批量处理短暂的一次性任务 (short livedone-off tasks)，即仅执行一次的任务，它保证批处理任务的一个或多个 `Pod` 成功结束。
  - Cronjob
   - 周期性定时任务
 
@@ -85,8 +83,8 @@ Label value的组成：
 - *equality-based（基于等式）* ：可以使用`=`、`==`、`!=`操作符，可以使用逗号分隔多个表达式
 - *set-based*（基于集合）：可以使用`in`、`notin`、`!`操作符，另外还可以没有操作符，直接写出某个label的key，表示过滤有某个key的object而不管该key的value是何值，`!`表示没有该label的object
 
-**举例说明Label Selector**
-**Label Selector可以被类比为 `SQL` 语句中的 `where` 查询条件，例如，`name=redis-slave` 这个 `label Selector` 作用于 `Pod` 时，可以被类比为 `select * from pod where pod'sname = 'redis-slave'` 这样的语句。**
+*举例说明Label Selector*
+*Label Selector可以被类比为 `SQL` 语句中的 `where` 查询条件，例如，`name=redis-slave` 这个 `label Selector` 作用于 `Pod` 时，可以被类比为 `select * from pod where pod'sname = 'redis-slave'` 这样的语句。*
 
 ### 1.5 Service
 
@@ -100,14 +98,14 @@ Label value的组成：
 
 ### 1.6 Endpoints
 
-为 `Service` 管理后端 `Pod`，当后端 `Pod` 被创建或销毁时，`endpoints` 列表会更新 `Pod` 对应的 `IP` 地址，以便 `Service` 访问请求能够确保被响应。
+为 `Service` 管理后端 `Pod`，当后端 `Pod` 被创建或销毁时，`Endpoints` 列表会更新 `Pod` 对应的 `IP` 地址，以便 `Service` 访问请求能够确保被响应。
 
 ### 1.7 DNS
 
-为 `kubernetes` 集群内资源对象的访问提供名称解析，这样就可以实现通过 `DNS` 名称而非 `IP` 地址来访问服务。
+为 `Kubernetes` 集群内资源对象的访问提供名称解析，这样就可以实现通过 `DNS` 名称而非 `IP` 地址来访问服务。
 
-- 实现集群内Service名称解析
+- 实现集群内 `Service` 名称解析
 
-- 实现集群内Pod内Container中应用访问互联网提供域名解析
+- 实现集群内 `Pod` 内 `Container` 中应用访问互联网提供域名解析
 
 > 原文来自 [https://community.yonyou.com/thread-228473-1-1.html](https://community.yonyou.com/thread-228473-1-1.html)
