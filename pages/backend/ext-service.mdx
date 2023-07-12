@@ -6,9 +6,9 @@
 
 由于 `Annotation` 属于 `硬编码` 方式，因此，在扩展服务时，需要先在 `Spring Boot` 中屏蔽原有的服务类，然后将扩展的服务使用 `@Service` 或其他相关的 `Annotation` 注解到 `Bean Factory` 中。
 
-# 扩展已有的服务步骤
+## 扩展已有的服务步骤
 
-1. 找到 `Spring Boot` 中原有的服务类，并继承扩展它，例如：
+### 1. 找到 `Spring Boot` 中原有的服务类，并继承扩展它，例如：
 
 原有类：
 ```java
@@ -48,7 +48,7 @@ public class ExtFEService extends FormEngineServiceImpl {
 }
 ```
 
-2. 在 `Spring Boot` 的启动类中，屏蔽原有的服务类，例如：
+### 2. 在 `Spring Boot` 的启动类中，屏蔽原有的服务类，例如：
 
 ```java
 
@@ -78,7 +78,7 @@ public class AISApplication extends SpringBootServletInitializer {
 }
 ```
 
-3. 关于 `ais` 项目
+## 关于 `ais` 项目
 
 在 `A8` 平台后端项目中，`ais` 项目是 `Spring Boot` 的启动类，因此，如果需要扩展 `A8` 平台后端的服务，需要在 `ais` 项目中进行扩展。 平台的核心功能均在 `product` 模块完成，
 `ais` 模块默认在代码中不包含任何业务逻辑，仅仅包含 `com.yonyouaud.ais.AISApplication` 启动类和相关的 `配置文件`，这样设计，就是为了让 `ais` 模块作为一个 `瘦模块`，便于在在其基础上进行 `客户化` 开发，

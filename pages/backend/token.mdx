@@ -1,0 +1,101 @@
+# Token 机制
+
+`A8数智化审计平台` 对于客户请求: `Web Fetch` 、`API` 、`Websocket` 都需要进行身份验证，验证方式为 `Token` 机制。
+
+## `Token` 机制的基本流程如下：
+
+- Http Header: [ Authorization ]
+- Http Parameter: [ token ]
+- Http Header: [ token ]
+- Http Parameter: [ access_token ]
+- Http Cookie: [ JSESSIONID ]
+
+> 以上为优先级顺序，如果 `Authorization` 存在则优先使用，否则依次使用其他方式。
+
+
+## 校验逻辑
+
+源码见：`commons` 包 `com.yonyouaud.commons.Utils` 实现类
+
+```java
+private static String getCurrentRequestKey() { // web request header 'Authorization'
+    RequestAttributes attribs = RequestContextHolder.getRequestAttributes();
+    if (attribs != null) {
+        HttpServletRequest request = ((ServletRequestAttributes) attribs).getRequest();
+        if (jwtHeader == null) {
+            JwtProperties jwtProperties = getJwtProperties();
+            jwtHeader = jwtProperties.getHeader();
+        }
+        // Header: [Authorization: ]
+        String token = request.getHeader(jwtHeader);
+        if (token == null) {
+            token = request.getHeader(jwtHeader.toLowerCase());
+        }
+        if (log.isDebugEnabled()) {
+            log.info("getCurrentRequestKey jwt header {}, token {}", jwtHeader, token);
+        }
+        // url: &token=
+        if (token == null) {
+            if (jwtRequestKey == null) {
+                JwtProperties jwtProperties = getJwtProperties();
+                jwtRequestKey = jwtProperties.getRequestKey();
+                if (jwtRequestKey == null) {
+                    jwtRequestKey = jwtHeader;
+                }
+            }
+            token = request.getParameter(jwtRequestKey);
+            if (log.isDebugEnabled()) {
+                log.info("getCurrentRequestKey get parameter jwtRequestKey {},  token {}", jwtRequestKey, token);
+            }
+        }
+        // Header: [token: ]
+        if (token == null) {
+            token = request.getHeader("token");
+        }
+        // url: &access_token=
+        if (token == null) {
+            token = request.getParameter("access_token");
+        }
+        if (!StringUtils.isEmpty(token)) {
+            if (token.startsWith("APIKEY")) {
+                token = getUserIdByApiToken(token);
+                if (log.isDebugEnabled()) {
+                    log.info("getCurrentRequestKey get api token {}", token);
+                }
+            }
+        }
+        // Cookie: [JSESSIONID=]
+        if (token == null) {
+            // request path
+            String path = request.getServletPath();
+            if (log.isDebugEnabled()) {
+                log.info("getCurrentRequestKey token is null, will return sessionId. path:{}", path);
+            }
+            // 为了兼容老的前端代码，这里将sessionId也设置用户缓存中
+            token = request.getSession().getId();
+        }
+        if (log.isDebugEnabled()) {
+            log.info("getCurrentRequestKey return token final {}", token);
+        }
+        return token;
+    }
+    return null;
+}
+```
+
+## `Token` 生成
+
+`Token` 生成包含两种方式：
+
+### `APIKEY` 生成：
+APIKEY是一串随机生成的值，存入到 `a_prod_apitoken` 表中，管理用户及其对应的角色
+
+### `JWT` 生成：
+
+源码见：`commons` 包 `com.yonyouaud.commons.Utils` 实现类，`JwtTokenUtil` 类底层使用了 `io.jsonwebtoken.Jwts` 包进行 `JWT` 生成
+
+```java
+String jwtToken = JwtTokenUtil.generateToken(userInfo, secret, validity);
+```
+
+系统在获取到 `Token` 值之后，区分是 `APIKEY` 还是 `JWT`，如果是 `APIKEY` 则从 `a_prod_apitoken` 表中获取用户信息，如果是 `JWT` 则从 `Token` 中解析出用户信息。
