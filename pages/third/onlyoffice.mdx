@@ -144,7 +144,7 @@ systemctl daemon-reload
 
 拉取最新镜像
 ```sh
-docker pull onlyoffice/documentserver:latest
+docker pull hub.yonyouaud.com/a8/onlyoffice/documentserver:7.1
 ```
 
 ### OnlyOffice镜像拉取（无法联网）
@@ -153,12 +153,12 @@ docker pull onlyoffice/documentserver:latest
 
 拉取最新
 ```sh
-docker pull onlyoffice/documentserver:latest
+docker pull hub.yonyouaud.com/a8/onlyoffice/documentserver:7.1
 ```
  
 运行 `docker save` 命令将镜像保存为 `tar` 归档文件
 ```sh
-docker save -o /home/onlyoffice.tar onlyoffice/documentserver:latest
+docker save -o /home/onlyoffice.tar hub.yonyouaud.com/a8/onlyoffice/documentserver:7.1
 ```
 将 `tar` 归档文件拷贝到内网服务器
 scp …
@@ -168,16 +168,16 @@ scp …
 docker load -i onlyoffice.tar
 ```
 
+> 可以联系 `公共研发中心` 获取镜像 `onlyoffice.tar` 文件
+
 ### 运行 `docker` 镜像
 
 1. 直接运行镜像（此处用第 2 步）
 ```sh
-docker run -i -t -d -p 8081:80 --name onlyoffice --restart=always -e JWT_SECRET=false onlyoffice/documentserver
+docker run -d -p 9006:80 --name onlyoffice --restart=always onlyoffice/documentserver
 ```
 
 如果您希望单独安装 `ONLYOFFICE` 文档服务器，请使用此命令。
-
-> 注：从 7.2 版本开始，我们添加了随机生成的 JWT 秘密。如果 JWT secret 没有在环境变量中指定，它会导致在每次 VM 或物理服务器重启时重新生成它，因此集成可能会出现问题。为避免此问题，请在 中指定您自己的值-e JWT_SECRET=my_jwt_secret。如果您不打算在安装中使用 JWT，请使用-e JWT_ENABLED=false.
 
 2. 配置 `docker` 镜像存储数据
 
@@ -191,7 +191,7 @@ docker run -i -t -d -p 8081:80 --name onlyoffice --restart=always -e JWT_SECRET=
 要从容器外部访问您的数据，您需要安装卷。可以通过在 docker run 命令中指定 `-v` 选项来完成
 
 ```sh
-docker run -itd -p 8081:80  -e JWT_ENABLED=false --name onlyoffice --restart=always \
+docker run -d -p 9006:80 --name onlyoffice --restart=always \
     -v /data/onlyoffice/DocumentServer/logs:/var/log/onlyoffice  \
     -v /data/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data  \
     -v /data/onlyoffice/DocumentServer/lib:/var/lib/onlyoffice \
@@ -207,7 +207,9 @@ mkdir -p /data/onlyoffice/DocumentServer/{logs,data,lib,db}
 
 4. 路由配置
 
-在 `nginx` 配置文件中添加如下配置，解决跨域问题
+在 `nginx` 配置文件中添加如下配置，解决跨域问题。
+
+下面例子中，`OnlyOffice` 部署地址为: `http://10.2.112.24:9006` 
 
 ```text
 server {
@@ -255,7 +257,7 @@ server {
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
-        proxy_pass http://10.2.112.21:31992;
+        proxy_pass http://a8-platform/;
         proxy_set_header X-Forwarded-Host $the_host;
         proxy_set_header X-Forwarded-Proto $the_scheme;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -265,7 +267,9 @@ server {
 
 5. `OnlyOffice` 镜像
 
-建议采用审友封装好的镜像: [hub.yonyouaud.com/a8/documentserver](hub.yonyouaud.com/a8/documentserver)
+建议采用审友封装好的镜像: [hub.yonyouaud.com/a8/onlyoffice/documentserver:7.1](hub.yonyouaud.com/a8/onlyoffice/documentserver:7.1)
+
+- 端口映射：镜像默认开启 `80` 端口，可以在 `docker run` 命令中指定 `-p` 选项来进行宿主端口映射
 
 
-在浏览器输入：`http://服务器地址:8081`
+在浏览器输入：`http://服务器地址:9006`
