@@ -142,10 +142,13 @@ systemctl daemon-reload
 
 ### OnlyOffice镜像拉取（可联网）
 
-拉取最新镜像
+拉取 `审友 OnlyOffice` 最新镜像（该镜像经过部分处理，可以无需初始化及配置，直接使用）
+
 ```sh
 docker pull hub.yonyouaud.com/a8/onlyoffice/documentserver:7.1
 ```
+
+> 如果使用 `官方镜像`，请拉取 [onlyoffice/documentserver](https://hub.docker.com/r/onlyoffice/documentserver/) 镜像，并根据其说明完成容器启动及配置
 
 ### OnlyOffice镜像拉取（无法联网）
 
