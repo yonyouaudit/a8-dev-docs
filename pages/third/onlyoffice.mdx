@@ -204,6 +204,65 @@ mkdir -p /data/onlyoffice/DocumentServer/{logs,data,lib,db}
 ```
 
 > 注：如果您尝试安装尚未创建的文件夹，则会创建这些文件夹，但对它们的访问将受到限制。您将需要手动更改他们的访问权限。
-4. 访问验证
+
+4. 路由配置
+
+在 `nginx` 配置文件中添加如下配置，解决跨域问题
+
+```text
+server {
+    listen 80;
+    server_name demo10.yonyouaud.com;
+    server_tokens off;
+
+    location /example/ {
+        proxy_pass http://10.2.112.24:9006/example/;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $proxy_connection;
+        proxy_set_header X-Forwarded-Host $the_host;
+        proxy_set_header X-Forwarded-Proto $the_scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /web-apps/ {
+        proxy_pass http://10.2.112.24:9006/web-apps/;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $proxy_connection;
+        proxy_set_header X-Forwarded-Host $the_host;
+        proxy_set_header X-Forwarded-Proto $the_scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /7.2.1-34/ {
+        proxy_pass http://10.2.112.24:9006/7.2.1-34/;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $proxy_connection;
+        proxy_set_header X-Forwarded-Host $the_host;
+        proxy_set_header X-Forwarded-Proto $the_scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /cache/ {
+        proxy_pass http://10.2.112.24:9006/cache/;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $proxy_connection;
+        proxy_set_header X-Forwarded-Host $the_host;
+        proxy_set_header X-Forwarded-Proto $the_scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_pass http://10.2.112.21:31992;
+        proxy_set_header X-Forwarded-Host $the_host;
+        proxy_set_header X-Forwarded-Proto $the_scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+
 
 在浏览器输入：`http://服务器地址:8081`
