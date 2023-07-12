@@ -101,3 +101,22 @@ String jwtToken = JwtTokenUtil.generateToken(userInfo, secret, validity);
 ```
 
 系统在获取到 `Token` 值之后，区分是 `APIKEY` 还是 `JWT`，如果是 `APIKEY` 则从 `a_prod_apitoken` 表中获取用户信息，如果是 `JWT` 则从 `Token` 中解析出用户信息。
+
+## `Token` 应用
+
+`A8` 中是不需要明确调用或者获取 `Token` 的，可以通过 `Utils` 类中的 `getUserId` 方法直接获取当前请求的用户信息。通过调用 `getTenantId` 方法获取当前请求的租户信息。
+
+如下示例代码：
+```java
+    String userId = Utils.getUserId();
+    if (StringUtils.isEmpty(userId)) { // 如果没有用户信息，就不保存
+        return;
+    }
+    String layout = body.get("layout");
+    String layoutId = body.get("layoutId");
+    String transparent = body.get("transparent");
+    if (StringUtils.isEmpty(transparent)) {
+        transparent = "NO";
+    }
+    String tenantId = Utils.getTenantId(userId);
+```
