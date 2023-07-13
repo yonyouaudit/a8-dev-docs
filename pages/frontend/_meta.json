@@ -7,8 +7,6 @@
   "api": "服务请求",
   "studio": "开发工作台",
   "watermark": "水印设置",
-  "package": "前端打包",
   "api-link": "API集成",
-  "ts": "TypeScript类型说明",
-  "dev": "界面开发指南"
+  "ext": "扩展知识"
 }

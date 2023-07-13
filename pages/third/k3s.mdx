@@ -1,0 +1,104 @@
+# K3S 系统简介
+
+`K3s` 是 `Rancher` 发布的一款 `Kubernetes` 发行版，**非常轻量**，安装和使用也非常方便。可以单节点部署，很多时候我们只需要一个单节点的 `Kubernetes` 集群，这时候 `K3s` 就是一个很好的选择。
+
+[K3S官网](https://rancher.com/docs/k3s/latest/en/)
+
+## `K3s` 的特点
+
+- 轻量级：`k3s` 的二进制文件只有 `40MB` 左右，比标准的 `Kubernetes` 二进制文件小得多，因此启动速度更快，对资源的消耗也更少。
+- 简单易用：`k3s` 的安装和配置非常简单，可以在几分钟内完成。它还提供了一个用户友好的 `Web UI`，可以方便地管理 `Kubernetes` 集群。
+- 安全性：`k3s` 默认启用了`TLS证书` 和 `RBAC` 权限控制，可以有效地保护 `Kubernetes` 集群的安全性。
+- 多架构支持：`k3s` 支持 `x86`、`ARM64` 等多种架构，可以在不同的硬件平台上运行，非常适合于边缘计算场景。
+- 可嵌入性：`k3s` 可以轻松地嵌入到其他应用程序中，例如 `IoT` 设备或 `CI/CD` 工具链中，为这些应用程序提供 `Kubernetes` 能力。
+
+总的来说，`k3s` 是一个非常适合轻量级环境和边缘计算场景的 `Kubernetes` 发行版，具有 **易用性**、**安全性**、**多架构支持** 等特点。
+
+
+> 单节点的 `Kubernetes` 集群，由于其直接使用 `Kubernetes` 的各种能力，又不占用太多资源，比较适合本地开发，当然也可以用于生产环境。
+
+## 安装K3S
+
+```bash
+curl -sfL https://get.k3s.io | sh -
+```
+
+安装状态
+```text
+[INFO]  Finding release for channel stable
+[INFO]  Using v1.27.3+k3s1 as release
+[INFO]  Downloading hash https://github.com/k3s-io/k3s/releases/download/v1.27.3+k3s1/sha256sum-amd64.txt
+[INFO]  Downloading binary https://github.com/k3s-io/k3s/releases/download/v1.27.3+k3s1/k3s
+[INFO]  Verifying binary download
+[INFO]  Installing k3s to /usr/local/bin/k3s
+[INFO]  Skipping installation of SELinux RPM
+[INFO]  Creating /usr/local/bin/kubectl symlink to k3s
+[INFO]  Creating /usr/local/bin/crictl symlink to k3s
+[INFO]  Creating /usr/local/bin/ctr symlink to k3s
+[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+[INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
+[INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
+[INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
+[INFO]  systemd: Enabling k3s unit
+Created symlink /etc/systemd/system/multi-user.target.wants/k3s.service → /etc/systemd/system/k3s.service.
+[INFO]  systemd: Starting k3s
+```
+
+更详细的 `k3s` 安装说明可以参考官方文档 [https://rancher.com/docs/k3s/latest/en/installation/](https://rancher.com/docs/k3s/latest/en/installation/)
+
+## K3S状态
+
+安装完毕后，可以通过 `kubectl` 工具来确认 `K3s` 集群的状态。
+
+```bash
+sudo kubectl get nodes
+# or
+sudo kubectl get pods -A
+```
+
+## 卸载K3S
+
+```bash
+/usr/local/bin/k3s-uninstall.sh
+```
+
+更详细的 `k3s` 卸载说明可以参考官方文档 [https://docs.k3s.io/installation/uninstall](https://docs.k3s.io/installation/uninstall)
+
+## K3S Web UI
+
+默认情况下，我们使用 `kubectl` 工具操作 `k3s` 即可，`kubernetes` 提供一个简单 `Web UI`，可以方便地管理 `Kubernetes` 集群。
+
+```bash
+sudo kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+sudo kubectl proxy # with nohup
+```
+
+创建角色绑定 `kubernetes-dashboard.yml`
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+
+```sh
+sudo kubectl apply -f kubernetes-dashboard.yml
+```
+
+部署完毕后，可以通过 [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/workloads?namespace=default](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/workloads?namespace=default) 访问 `Web UI`。
+
+更详细的 `k3s` `Web UI` 说明可以参考官方文档 [https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
+
+## 更多K3S说明
+
+- 配置文件默认位置: `/etc/rancher/k3s/k3s.yaml`
+- 创建访问 `Token` 请执行： `sudo kubectl -n kubernetes-dashboard create token admin-user` 记住生成的 `Token`，后续访问 `Web UI` 时需要用到。
+
+## 参考
+
+- [https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
+- [https://kubernetes.io/zh-cn/docs/tasks/run-application/run-stateless-application-deployment/](https://kubernetes.io/zh-cn/docs/tasks/run-application/run-stateless-application-deployment/)
+- [https://docs.k3s.io/installation/configuration](https://docs.k3s.io/installation/configuration)
+- [https://docs.k3s.io/installation/kube-dashboard](https://docs.k3s.io/installation/kube-dashboard)

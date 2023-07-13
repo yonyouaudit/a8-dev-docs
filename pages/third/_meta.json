@@ -2,5 +2,6 @@
     "storage": "存储服务",
     "search": "搜索服务",
     "onlyoffice": "OnlyOffice服务",
-    "kubernetes": "Kubernetes核心概念"
+    "kubernetes": "Kubernetes核心概念",
+    "k3s": "K3S系统简介"
 }
