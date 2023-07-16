@@ -7,5 +7,6 @@
     "patch": "补丁机制",
     "ext-service": "扩展服务",
     "token": "Token机制",
-    "tablename": "表名规范"
+    "tablename": "表名规范",
+    "lib-licenses": "第三方库许可证"
 }
