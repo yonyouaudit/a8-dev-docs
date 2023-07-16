@@ -8,5 +8,6 @@
   "studio": "开发工作台",
   "watermark": "水印设置",
   "api-link": "API集成",
-  "ext": "扩展知识"
+  "ext": "扩展知识",
+  "lib-licenses": "依赖授权协议"
 }

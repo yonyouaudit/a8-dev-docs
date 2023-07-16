@@ -1,0 +1,24 @@
+# 第三方依赖授权协议
+
+`A8数智化审计平台` 是 `审友数治科技有限公司` 开发的 `商业授权` 的业务系统平台，其核心功能是对企业的业务数据进行审计分析，以发现企业的经营风险，提升企业的经营效率。
+
+但 `A8数智化审计平台` 在开发和实际使用过程中，大量使用到第三方 `开源库` 及 `开源框架`，根据 `开源协议` 的规定，我们在此对 `A8数智化审计平台` 中使用到的第三方 `开源库` 及 `开源框架` 的授权协议进行说明。
+
+## 依赖库授权文件收集
+
+在 `A8数智化审计平台` 第三方依赖授权文件收集过程中，采用 [license-checker](https://www.npmjs.com/package/license-checker) 工具
+```sh
+npm install -g license-checker
+```
+
+## 依赖库授权文件生成
+
+通过 `license-checker` 工具生成 `json` 格式的授权文件，命令如下：
+```sh
+cd /path/to/a8/frontend/AIS
+license-checker --json > ./src/deps-license.json
+```
+
+## 依赖库授权文件展示
+
+在 `A8数智化审计平台` 前端，通过 `React` 开发了专门的 `依赖库授权信息` 查看专门页面，页面地址为：[http://${HOST}:${port}/ais/page.html#/deps-license](http://${HOST}:${port}/ais/page.html#/deps-license)
